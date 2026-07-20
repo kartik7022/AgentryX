@@ -1,0 +1,64 @@
+.app-shell {
+  display: flex;
+  min-height: 100dvh;
+  background: var(--color-bg-canvas);
+}
+
+.app-content {
+  flex: 1;
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  padding: var(--space-8);
+  min-width: 0;
+  background: var(--color-bg-canvas);
+}
+
+.page-title {
+  margin: 0 0 var(--space-2) !important;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-lg) !important;
+  font-weight: var(--font-weight-bold) !important;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--line-height-snug);
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-6);
+  max-width: 72ch;
+  font-size: var(--font-size-sm);
+}
+
+.MuiCardContent-root {
+  padding: var(--space-5) !important;
+}
+
+.MuiTable-root {
+  background: var(--color-bg-surface);
+}
+
+.MuiTableRow-root:hover {
+  background-color: var(--color-primary-50);
+}
+
+.MuiDrawer-paper {
+  scrollbar-gutter: stable;
+}
+
+.MuiDialogContent-root {
+  padding-top: var(--space-4) !important;
+}
+
+@media (max-width: 900px) {
+  .app-content {
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    padding: var(--space-5);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-content {
+    padding: var(--space-4);
+  }
+}

@@ -1,0 +1,47 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+frontend/**/node_modules/
+dist/
+frontend/**/dist/
+build/
+frontend/**/build/
+coverage/
+.npm/
+.vite/
+
+# Logs and local state
+*.log
+*.pid
+*.seed
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.tmp
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Docker local overrides
+docker-compose.override.yml

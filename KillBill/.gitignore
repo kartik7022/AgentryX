@@ -1,0 +1,49 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+gateway/.env
+gateway/.env.*
+!gateway/.env.example
+
+# Node / dependencies
+node_modules/
+gateway/node_modules/
+npm-debug.log*
+
+# Runtime state and generated data
+*.log
+*.pid
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.tmp
+account-id.txt
+demo-account-id.txt
+manager-demo-account.txt
+subscription-ids.json
+demo-subscription-ids.json
+app-db.json
+gateway/billing-config.json
+gateway/payments.json
+gateway/usage-data.json
+gateway/plans.json
+gateway/debug-merged-catalog.xml
+gateway/trial-usage.db
+
+# Old local generator scratch files
+gateway/write-gateway*.js
+gateway/cutoff)
+gateway/console.log('Socket.IO
+gateway/([{]
+gateway/'
+gateway/e.accountId
+gateway/node
+gateway/[{]
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

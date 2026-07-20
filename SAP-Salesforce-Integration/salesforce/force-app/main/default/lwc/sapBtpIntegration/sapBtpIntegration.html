@@ -1,0 +1,206 @@
+<template>
+    <lightning-card title="Enterprise Integration Portal" icon-name="custom:custom14">
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- STEP 1: System Selection -->
+        <template if:true={showSelection}>
+            <div class="slds-p-around_large">
+                <div class="slds-text-align_center slds-m-bottom_large">
+                    <lightning-icon icon-name="utility:connected_apps" size="large"></lightning-icon>
+                    <p class="slds-text-heading_large slds-m-top_small">Enterprise Portal</p>
+                    <p class="slds-text-body_regular slds-m-top_small">Select a system to connect</p>
+                </div>
+                <template if:true={errorMessage}>
+                    <div class="slds-box slds-theme_error slds-m-bottom_medium">
+                        <p>{errorMessage}</p>
+                    </div>
+                </template>
+                <lightning-combobox
+                    name="system"
+                    label="Select System"
+                    placeholder="-- Choose a System --"
+                    value={selectedSystem}
+                    options={systemOptions}
+                    onchange={handleSystemChange}>
+                </lightning-combobox>
+                <template if:true={selectedSystem}>
+                    <div class="slds-m-top_large slds-text-align_center">
+                        <lightning-button
+                            variant="brand"
+                            label="Connect"
+                            icon-name="utility:forward"
+                            onclick={handleConnect}>
+                        </lightning-button>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- STEP 2: SAP Login -->
+        <template if:true={showLoginForm}>
+            <div class="slds-p-around_large">
+                <div class="slds-text-align_center slds-m-bottom_large">
+                    <lightning-icon icon-name="utility:lock" size="large"></lightning-icon>
+                    <p class="slds-text-heading_medium slds-m-top_small">SAP BTP Login</p>
+                    <p class="slds-text-body_regular">Enter your SAP credentials</p>
+                </div>
+                <template if:true={errorMessage}>
+                    <div class="slds-box slds-theme_error slds-m-bottom_medium">
+                        <p>{errorMessage}</p>
+                    </div>
+                </template>
+                <div class="slds-form slds-form_stacked">
+                    <lightning-input
+                        type="email"
+                        label="SAP Email"
+                        placeholder="finance.user@company.com"
+                        value={sapUsername}
+                        onchange={handleUsernameChange}
+                        class="slds-m-bottom_medium">
+                    </lightning-input>
+                    <lightning-input
+                        type="password"
+                        label="SAP Password"
+                        value={sapPassword}
+                        onchange={handlePasswordChange}
+                        class="slds-m-bottom_large">
+                    </lightning-input>
+                </div>
+                <div class="slds-grid slds-gutters slds-m-top_medium">
+                    <div class="slds-col">
+                        <lightning-button
+                            variant="neutral"
+                            label="Back"
+                            icon-name="utility:back"
+                            onclick={handleBack}>
+                        </lightning-button>
+                    </div>
+                    <div class="slds-col slds-text-align_right">
+                        <lightning-button
+                            variant="brand"
+                            label="Login to SAP"
+                            icon-name="utility:key"
+                            onclick={handleSAPLogin}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- STEP 3: Dashboard -->
+        <template if:true={showDashboard}>
+            <div class="slds-p-around_medium">
+
+                <!-- User Info Bar -->
+                <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                        <div>
+                            <lightning-icon icon-name="utility:user" size="small"></lightning-icon>
+                            <strong class="slds-m-left_small">{welcomeMessage}</strong>
+                            <span class="slds-badge slds-m-left_small">{userRole}</span>
+                            <span class="slds-badge slds-badge_lightest slds-m-left_small">SAP Authenticated ✅</span>
+                        </div>
+                        <lightning-button
+                            variant="destructive-text"
+                            label="Logout"
+                            icon-name="utility:logout"
+                            onclick={handleLogout}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- Prompt Box -->
+                <div class="slds-box slds-m-bottom_medium">
+                    <p class="slds-text-heading_small slds-m-bottom_small">💬 Ask SAP HANA</p>
+                    <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">
+                        Flow: Salesforce → Pipedream → Middleware → SAP HANA → Results
+                    </p>
+                    <lightning-input
+                        type="text"
+                        label=""
+                        placeholder="e.g. Show me all finance employees"
+                        value={promptQuestion}
+                        onchange={handlePromptChange}>
+                    </lightning-input>
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            variant="brand"
+                            label="Ask Question"
+                            icon-name="utility:search"
+                            onclick={handleAskQuestion}>
+                        </lightning-button>
+                    </div>
+                    <template if:true={promptDescription}>
+                        <div class="slds-m-top_small slds-box slds-box_xx-small slds-theme_shade">
+                            <p class="slds-text-body_small">📊 {promptDescription}</p>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Error -->
+                <template if:true={errorMessage}>
+                    <div class="slds-box slds-theme_error slds-m-bottom_medium">
+                        <p>{errorMessage}</p>
+                    </div>
+                </template>
+
+                <!-- Results Table -->
+                <template if:true={hasResults}>
+                    <div class="slds-box slds-m-bottom_medium">
+                        <p class="slds-text-heading_small slds-m-bottom_small">
+                            Results ({resultCount}) — {userRole} View
+                        </p>
+                        <div class="slds-scrollable_x">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Salary</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={queryResults} for:item="emp">
+                                        <tr key={emp.ID}>
+                                            <td>{emp.ID}</td>
+                                            <td>{emp.NAME}</td>
+                                            <td>{emp.DEPARTMENT}</td>
+                                            <td>{emp.SALARY}</td>
+                                            <td>{emp.LOCATION}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Open Fiori Button -->
+                <template if:true={fioriUrl}>
+                    <div class="slds-box slds-m-top_medium">
+                        <p class="slds-text-heading_small slds-m-bottom_small">🔷 SAP Fiori App</p>
+                        <p class="slds-text-body_regular slds-text-color_weak slds-m-bottom_small">
+                            Click to open SAP Fiori with your {userRole} role access
+                        </p>
+                        <lightning-button
+                            variant="brand"
+                            label="Open SAP Fiori App"
+                            icon-name="utility:new_window"
+                            onclick={openFiori}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+    </lightning-card>
+</template>

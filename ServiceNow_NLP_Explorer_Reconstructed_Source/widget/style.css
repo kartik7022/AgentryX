@@ -1,0 +1,44 @@
+.nlp-explorer {
+  margin-top: 20px;
+}
+
+.nlp-explorer .panel {
+  border-radius: 6px;
+}
+
+.nlp-explorer .panel-heading {
+  padding: 15px 20px;
+}
+
+.nlp-explorer .panel-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.nlp-explorer textarea {
+  resize: vertical;
+}
+
+.nlp-explorer .generated-query {
+  margin-top: 20px;
+}
+
+.nlp-explorer .generated-query pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.nlp-explorer .result-section {
+  margin-top: 25px;
+}
+
+.nlp-explorer .table th {
+  white-space: nowrap;
+}
+
+.nlp-explorer .pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+}

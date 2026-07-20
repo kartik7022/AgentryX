@@ -1,0 +1,72 @@
+/* ── Editor Page ───────────────────────────────────────────────────────────── */
+.editor-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-bg-canvas);
+}
+
+.editor-page__centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--color-bg-canvas);
+}
+
+.editor-page__error-shell {
+  padding: 32px;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.editor-page__inline-error {
+  padding: 0 16px 8px;
+}
+
+.editor-page__main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.editor-page__panels {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.editor-page__preview-section {
+  height: 320px;
+  flex-shrink: 0;
+  border-top: 2px solid var(--color-primary-200);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--color-bg-surface);
+}
+
+.editor-page__close-preview {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 10;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.editor-page__close-preview:hover {
+  background: var(--color-bg-muted);
+  color: var(--color-text-base);
+}

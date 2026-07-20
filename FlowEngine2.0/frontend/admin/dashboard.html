@@ -1,0 +1,3203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgentryX — Admin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #F4F4F5;
+            --surface: #FFFFFF;
+            --surface2: #FAFAFA;
+            --b1: #E4E4E7;
+            --b2: #D4D4D8;
+            --b3: #A1A1AA;
+            --tx1: #18181B;
+            --tx2: #52525B;
+            --tx3: #A1A1AA;
+            --blue: #2563EB;
+            --blue-lt: #EFF6FF;
+            --blue-md: #BFDBFE;
+            --green: #16A34A;
+            --green-lt: #F0FDF4;
+            --green-md: #BBF7D0;
+            --red: #DC2626;
+            --red-lt: #FEF2F2;
+            --red-md: #FECACA;
+            --amber: #D97706;
+            --amber-lt: #FFFBEB;
+            --amber-md: #FDE68A;
+            --sans: 'Albert Sans', sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+            --sh1: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --sh2: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+            --sh3: 0 16px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+            --r: 8px;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--tx1);
+            font-family: var(--sans);
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ════════ TOPBAR ════════ */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 56px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--b1);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            box-shadow: var(--sh1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            text-decoration: none;
+            margin-right: 16px;
+        }
+
+        .brand-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            background: #1E293B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .brand-logo svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--tx1);
+            letter-spacing: -0.3px;
+        }
+
+        .brand-env {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--tx3);
+            background: var(--bg);
+            border: 1px solid var(--b1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: stretch;
+            height: 100%;
+            flex: 1 1 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            min-width: 0;
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 10px;
+            height: 100%;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--tx2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: color 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-btn:hover {
+            color: var(--tx1);
+        }
+
+        .nav-btn.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+            font-weight: 600;
+        }
+
+        .nav-badge {
+            font-family: var(--mono);
+            font-size: 9px;
+            background: var(--amber-lt);
+            color: var(--amber);
+            border: 1px solid var(--amber-md);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        .tr {
+            margin-left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tr-sep {
+            width: 1px;
+            height: 18px;
+            background: var(--b1);
+        }
+
+        .admin-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px 5px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--b1);
+            background: var(--surface2);
+        }
+
+        .admin-ava {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .admin-col {
+            display: none;
+        }
+
+        .admin-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tx1);
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .admin-role {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .admin-role.superadmin {
+            color: var(--amber);
+        }
+
+        .admin-role.admin {
+            color: var(--blue);
+        }
+
+        .btn-out {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--b1);
+            background: var(--surface);
+            font-family: var(--sans);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--tx2);
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: var(--sh1);
+        }
+
+        .btn-out:hover {
+            border-color: var(--red-md);
+            color: var(--red);
+            background: var(--red-lt);
+        }
+
+
+
+        /* ════════ ADMIN HOVER ════════ */
+        .admin-pill {
+            position: relative;
+        }
+
+        .admin-hover-card {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--b1);
+            border-radius: 8px;
+            padding: 10px 14px;
+            box-shadow: var(--sh3);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-4px);
+            transition: opacity 0.15s, transform 0.15s;
+            z-index: 200;
+            min-width: 160px;
+        }
+
+        .admin-hover-card .ah-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tx1);
+            margin-bottom: 2px;
+        }
+
+        .admin-hover-card .ah-role {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .admin-pill:hover .admin-hover-card {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* ════════ MAIN ════════ */
+        .main {
+            padding: 68px 28px 48px;
+            max-width: 1160px;
+            margin: 0 auto;
+        }
+
+        .page-head {
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: rise 0.3s ease forwards;
+        }
+
+        .page-head h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--tx1);
+            letter-spacing: -0.4px;
+            margin-bottom: 2px;
+        }
+
+        .page-head p {
+            font-size: 13px;
+            color: var(--tx2);
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+            animation: rise 0.22s ease;
+        }
+
+        /* ════════ CARD ════════ */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--b1);
+            border-radius: var(--r);
+            box-shadow: var(--sh1);
+            overflow: hidden;
+        }
+
+        .card-head {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--b1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tx1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--blue-lt);
+            border: 1px solid var(--blue-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* ════════ FORMS ════════ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-grid.col1 {
+            grid-template-columns: 1fr;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .field.s2 {
+            grid-column: span 2;
+        }
+
+        .f-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--tx1);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .f-label em {
+            color: var(--red);
+            font-style: normal;
+        }
+
+        .f-sub {
+            font-size: 12px;
+            color: var(--tx3);
+        }
+
+        .f-input {
+            height: 36px;
+            padding: 0 11px;
+            background: var(--surface);
+            border: 1px solid var(--b2);
+            border-radius: 6px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--tx1);
+            outline: none;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .f-input::placeholder {
+            color: var(--tx3);
+            font-family: var(--sans);
+        }
+
+        .f-input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+            gap: 6px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--b1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.12s;
+            user-select: none;
+            background: var(--surface2);
+        }
+
+        .check-item:hover {
+            border-color: var(--b2);
+            background: var(--surface);
+            box-shadow: var(--sh1);
+        }
+
+        .check-item.checked {
+            border-color: var(--blue-md);
+            background: var(--blue-lt);
+        }
+
+        .check-item input {
+            display: none;
+        }
+
+        .check-box {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            border: 1.5px solid var(--b2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            transition: all 0.12s;
+            color: transparent;
+        }
+
+        .check-item.checked .check-box {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+        }
+
+        .check-lbl {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--tx2);
+        }
+
+        .check-item.checked .check-lbl {
+            color: var(--blue);
+        }
+
+        /* ════════ BUTTONS ════════ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 14px;
+            height: 34px;
+            border-radius: 6px;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.4), 0 0 0 1px rgba(37, 99, 235, 0.9);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-ghost {
+            background: var(--surface);
+            color: var(--tx2);
+            border: 1px solid var(--b2);
+            box-shadow: var(--sh1);
+        }
+
+        .btn-ghost:hover {
+            background: var(--surface2);
+            color: var(--tx1);
+            border-color: var(--b3);
+        }
+
+        .btn-danger {
+            background: var(--surface);
+            color: var(--red);
+            border: 1px solid var(--red-md);
+            box-shadow: var(--sh1);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--red-lt);
+            border-color: #fca5a5;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn .spinner {
+            width: 13px;
+            height: 13px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.65s linear infinite;
+            display: none;
+        }
+
+        .btn-ghost .spinner,
+        .btn-danger .spinner {
+            border-color: rgba(0, 0, 0, 0.15);
+            border-top-color: var(--tx2);
+        }
+
+        .btn.loading .btn-text {
+            display: none;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        /* ════════ STATS ════════ */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--b1);
+            border-radius: var(--r);
+            padding: 16px 18px;
+            box-shadow: var(--sh1);
+        }
+
+        .stat-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--tx3);
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .stat-val {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--tx1);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .stat-row-inner {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .stat-ico {
+            font-size: 22px;
+            opacity: 0.18;
+        }
+
+        /* ════════ SEARCH ════════ */
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-wrap input {
+            height: 32px;
+            padding: 0 10px 0 30px;
+            background: var(--surface2);
+            border: 1px solid var(--b1);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--sans);
+            color: var(--tx1);
+            outline: none;
+            width: 200px;
+            transition: all 0.2s;
+            box-shadow: var(--sh1);
+        }
+
+        .search-wrap input::placeholder {
+            color: var(--tx3);
+        }
+
+        .search-wrap input:focus {
+            border-color: var(--blue);
+            width: 260px;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-wrap::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a1a1aa' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* ════════ TABLE ════════ */
+        .tbl-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead tr {
+            background: var(--surface2);
+            border-bottom: 1px solid var(--b1);
+        }
+
+        th {
+            padding: 9px 14px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--tx3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--b1);
+            transition: background 0.1s;
+        }
+
+        tbody tr:hover {
+            background: #FAFAFA;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 11px 14px;
+            color: var(--tx2);
+            vertical-align: middle;
+        }
+
+        td.hi {
+            color: var(--tx1);
+            font-weight: 600;
+        }
+
+        .loading-row td {
+            text-align: center;
+            padding: 40px;
+            color: var(--tx3);
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+
+        /* ════════ BADGES ════════ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .badge::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+        .badge-green {
+            background: var(--green-lt);
+            color: var(--green);
+            border: 1px solid var(--green-md);
+        }
+
+        .badge-red {
+            background: var(--red-lt);
+            color: var(--red);
+            border: 1px solid var(--red-md);
+        }
+
+        .badge-amber {
+            background: var(--amber-lt);
+            color: var(--amber);
+            border: 1px solid var(--amber-md);
+        }
+
+        .badge-blue {
+            background: var(--blue-lt);
+            color: var(--blue);
+            border: 1px solid var(--blue-md);
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: var(--bg);
+            color: var(--tx2);
+            border: 1px solid var(--b1);
+        }
+
+        .t-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .t-btn {
+            height: 26px;
+            padding: 0 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--b1);
+            background: var(--surface2);
+            color: var(--tx2);
+            font-family: var(--sans);
+            transition: all 0.12s;
+        }
+
+        .t-btn:hover {
+            background: var(--surface);
+            border-color: var(--b2);
+            color: var(--tx1);
+        }
+
+        .t-del:hover {
+            border-color: var(--red-md);
+            color: var(--red);
+            background: var(--red-lt);
+        }
+
+        .t-edit:hover {
+            border-color: var(--blue-md);
+            color: var(--blue);
+            background: var(--blue-lt);
+        }
+
+        .t-upgrade:hover {
+            border-color: var(--green-md);
+            color: var(--green);
+            background: var(--green-lt);
+        }
+
+        /* ════════ ALERTS ════════ */
+        .alert {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .alert.show {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .alert-success {
+            background: var(--green-lt);
+            border: 1px solid var(--green-md);
+            color: var(--green);
+        }
+
+        .alert-error {
+            background: var(--red-lt);
+            border: 1px solid var(--red-md);
+            color: var(--red);
+        }
+
+        /* ════════ EMPTY ════════ */
+        .empty {
+            text-align: center;
+            padding: 52px 24px;
+        }
+
+        .empty-ico {
+            font-size: 28px;
+            opacity: 0.2;
+            margin-bottom: 12px;
+        }
+
+        .empty-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tx2);
+            margin-bottom: 4px;
+        }
+
+        .empty-sub {
+            font-size: 12px;
+            color: var(--tx3);
+        }
+
+        /* ════════ MODAL ════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.15s ease;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--b1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 440px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: var(--sh3);
+            animation: rise 0.15s ease;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--tx1);
+            margin-bottom: 4px;
+        }
+
+        .modal-sub {
+            font-size: 13px;
+            color: var(--tx2);
+            margin-bottom: 20px;
+            line-height: 1.55;
+        }
+
+        .modal-foot {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--b1);
+        }
+
+        .danger-box {
+            background: var(--red-lt);
+            border: 1px solid var(--red-md);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--red);
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--b1);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .protected-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--tx3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mono {
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--b2);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--b3);
+        }
+
+        .module-type-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .module-type-btn {
+            flex: 1;
+            height: 34px;
+            border-radius: 6px;
+            border: 1px solid var(--b2);
+            background: var(--surface2);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--tx2);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .module-type-btn.active {
+            background: var(--blue-lt);
+            border-color: var(--blue-md);
+            color: var(--blue);
+        }
+
+        /* ════════ RESPONSIVE ════════ */
+        @media (max-width: 900px) {
+            .nav-btn {
+                padding: 0 10px;
+                font-size: 12px;
+            }
+
+            .brand-name {
+                display: none;
+            }
+
+            .admin-col {
+                display: none;
+            }
+
+            .main {
+                padding: 68px 16px 40px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .topbar {
+                padding: 0 12px;
+                gap: 8px;
+            }
+
+            .nav {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-btn {
+                padding: 0 8px;
+                font-size: 11px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .nav-badge {
+                display: none;
+            }
+
+            .brand-env {
+                display: none;
+            }
+
+            .btn-out span {
+                display: none;
+            }
+
+            .tr-sep {
+                display: none;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.s2 {
+                grid-column: span 1;
+            }
+
+            .main {
+                padding: 64px 12px 32px;
+            }
+
+            .card-head {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .search-wrap input {
+                width: 100%;
+            }
+
+            .search-wrap input:focus {
+                width: 100%;
+            }
+
+            .search-wrap {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                padding: 16px;
+                margin: 12px;
+                max-width: calc(100vw - 24px);
+            }
+
+            .modal-overlay {
+                align-items: flex-end;
+                padding-bottom: 0;
+            }
+
+            .modal-overlay.open .modal {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                max-height: 85vh;
+            }
+
+            .page-head h1 {
+                font-size: 17px;
+            }
+
+            .t-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a class="brand" href="#">
+            <div class="brand-logo">
+                <svg viewBox="0 0 512 512" fill="#2563EB">
+                    <path
+                        d="M466.5 83.7l-192-80a48.15 48.15 0 0 0-36.9 0l-192 80C27.7 91.1 16 128 0 128c0 198.5 114.5 335.7 221.5 380.3 11.8 4.9 25.1 4.9 36.9 0C360.1 472.6 496 349.3 496 128c0-19.4-11.7-36.9-29.5-44.3zM256.1 446.3l-.1-381 175.9 73.3c-3.3 151.4-82.1 261.1-175.8 307.7z" />
+                </svg>
+            </div>
+            <span class="brand-name">AgentryX</span>
+        </a>
+
+        <div style="width:1px;height:28px;background:var(--b1);flex-shrink:0;margin-right:4px;"></div>
+
+        <nav class="nav" id="navTabs">
+            <button class="nav-btn active" data-tab="register" onclick="switchTab('register')">Register Client</button>
+            <button class="nav-btn" data-tab="clients" onclick="switchTab('clients')">Manage Clients</button>
+            <button class="nav-btn" data-tab="modules" id="modulesTab" onclick="switchTab('modules')"
+                style="display:none;">Modules Management</button>
+            <button class="nav-btn" data-tab="admins" id="adminsTab" onclick="switchTab('admins')"
+                style="display:none;">Manage Admins</button>
+            <button class="nav-btn" data-tab="datasource-types" id="dstypesTab" onclick="switchTab('datasource-types')"
+                style="display:none;">Datasource Types</button>
+            <button class="nav-btn" data-tab="module-groups" id="moduleGroupsTab" onclick="switchTab('module-groups')"
+                style="display:none;">Module Groups</button>
+        </nav>
+
+        <div class="tr">
+            <div class="admin-pill">
+                <div class="admin-ava" id="adminAvatar">A</div>
+                <div class="admin-hover-card">
+                    <div class="ah-name" id="adminUsername">Loading…</div>
+                    <div class="ah-role admin-role" id="adminRole">—</div>
+                </div>
+            </div>
+            <div class="tr-sep"></div>
+            <button class="btn-out" onclick="doLogout()">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Sign Out
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="page-head">
+            <h1 id="pageTitle">Register Client</h1>
+            <p id="pageSub">Create a new client account and issue an API key</p>
+        </div>
+
+        <!-- TAB 1: REGISTER CLIENT -->
+        <div class="panel active" id="panel-register">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">
+                        <div class="card-icon">✉</div>New Client Account
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="reg-alert-success" class="alert alert-success"></div>
+                    <div id="reg-alert-error" class="alert alert-error"></div>
+                    <div class="form-grid">
+                        <div class="field s2">
+                            <label class="f-label">Client Email <em>*</em></label>
+                            <input class="f-input" type="email" id="reg-email" placeholder="client@company.com" />
+                            <span class="f-sub">password setup link will be sent to this address</span>
+                        </div>
+                        <div class="field s2">
+                            <label class="f-label">Modules / Scopes <em>*</em></label>
+                            <div class="check-grid" id="modules-grid"><span
+                                    style="color:var(--tx3);font-size:12px;">Loading…</span></div>
+                        </div>
+                        <div class="field">
+                            <label class="f-label">Account Type <em>*</em></label>
+                            <select class="f-input" id="reg-account-type" onchange="onAccountTypeChange()">
+                                <option value="trial">Trial</option>
+                                <option value="production">Production</option>
+                            </select>
+                        </div>
+                        <div class="field" id="expires-field">
+                            <label class="f-label">Expires At <em>*</em></label>
+                            <input class="f-input" type="date" id="reg-expires-at" />
+                            <span class="f-sub">Leave blank — production defaults to 1 year, trial to 30 days</span>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <button class="btn btn-primary" id="reg-btn" onclick="registerClient()">
+                            <span class="btn-text">Create Account &amp; Send API Key</span>
+                            <div class="spinner"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MANAGE CLIENTS -->
+        <div class="panel" id="panel-clients">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-lbl">Total Clients</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-total">—</div>
+                        <div class="stat-ico">👥</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Active</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-active">—</div>
+                        <div class="stat-ico">✅</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">
+                        <div class="card-icon">👥</div>All Client Accounts
+                    </div>
+                    <div class="search-wrap"><input type="text" id="clients-search"
+                            placeholder="Search by email or tenant…" oninput="filterClients()" /></div>
+                </div>
+                <div id="clients-alert-error" class="alert alert-error" style="margin:14px 20px 0;"></div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Tenant ID</th>
+                                <th>Modules</th>
+                                <th>Status</th>
+                                <th>Account Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-tbody">
+                            <tr class="loading-row">
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: MODULES MANAGEMENT -->
+        <div class="panel" id="panel-modules">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-lbl">Total Modules</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-modules-total">—</div>
+                        <div class="stat-ico">📦</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Active</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-modules-active">—</div>
+                        <div class="stat-ico">✅</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Default</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-modules-default">—</div>
+                        <div class="stat-ico">⭐</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">
+                        <div class="card-icon">📦</div>All Modules
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateModuleModal()"><span class="btn-text">+ Add
+                            Module</span></button>
+                </div>
+                <div id="modules-alert-error" class="alert alert-error" style="margin:14px 20px 0;"></div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Version</th>
+                                <th>Status</th>
+                                <th>Default</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modules-tbody">
+                            <tr class="loading-row">
+                                <td colspan="7">Fetching modules…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: MANAGE ADMINS -->
+        <div class="panel" id="panel-admins">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">
+                        <div class="card-icon">🔐</div>Admin Accounts
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateAdminModal()"><span class="btn-text">+ Add
+                            Admin</span></button>
+                </div>
+                <div id="admins-alert" class="alert" style="margin:14px 20px 0;"></div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created By</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admins-tbody">
+                            <tr class="loading-row">
+                                <td colspan="6">Fetching admins…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- TAB 6: MODULE GROUPS -->
+        <div class="panel" id="panel-module-groups">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-lbl">Total Groups</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-groups-total">—</div>
+                        <div class="stat-ico">🗂️</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Active</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-groups-active">—</div>
+                        <div class="stat-ico">✅</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">
+                        <div class="card-icon">🗂️</div>All Module Groups
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateGroupModal()"><span class="btn-text">+ Add
+                            Group</span></button>
+                </div>
+                <div id="groups-alert" class="alert" style="margin:14px 20px 0;"></div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Display Order</th>
+                                <th>Status</th>
+                                <th>Modules</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groups-tbody">
+                            <tr class="loading-row">
+                                <td colspan="6">Fetching groups…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: DATASOURCE TYPES -->
+        <!-- TAB 5: DATASOURCE TYPES -->
+        <div class="panel" id="panel-datasource-types">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-lbl">Total Drivers</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-dst-total">—</div>
+                        <div class="stat-ico">🗄️</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Active</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-dst-active">—</div>
+                        <div class="stat-ico">✅</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Inactive</div>
+                    <div class="stat-row-inner">
+                        <div class="stat-val" id="stat-dst-inactive">—</div>
+                        <div class="stat-ico">⏸️</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">
+                        <div class="card-icon">🗄️</div>All Drivers
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateDstypeModal()"><span class="btn-text">+ Add
+                            Driver</span></button>
+                </div>
+                <div id="dst-alert" class="alert" style="margin:14px 20px 0;"></div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Canonical Name</th>
+                                <th>Display Name</th>
+                                <th>Protocol</th>
+                                <th>Auth Style</th>
+                                <th>Aliases</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dst-tbody">
+                            <tr class="loading-row">
+                                <td colspan="7">Fetching drivers…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- MODAL: Delete Client -->
+    <div class="modal-overlay" id="deleteClientModal">
+        <div class="modal">
+            <div class="modal-title">Delete Client Account</div>
+            <div class="modal-sub">This permanently deletes the account, API key, and all associated data. This action
+                cannot be undone.</div>
+            <div class="danger-box" id="deleteClientEmail">—</div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('deleteClientModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteClientBtn" onclick="confirmDeleteClient()"><span
+                        class="btn-text">Delete Permanently</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Edit Client -->
+    <div class="modal-overlay" id="editClientModal">
+        <div class="modal">
+            <div class="modal-title">Edit Client</div>
+            <input type="hidden" id="editClientOriginalEmail" />
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field"><label class="f-label">Email</label><input class="f-input" type="email"
+                        id="edit-email" /></div>
+                <div class="field"><label class="f-label">New Password <span style="font-weight:400;opacity:.6">(leave
+                            blank to keep current)</span></label><input class="f-input" type="password"
+                        id="edit-password" placeholder="Leave blank to keep current" /></div>
+                <div class="field"><label class="f-label">Account Type</label>
+                    <select class="f-input" id="edit-account-type">
+                        <option value="trial">Trial</option>
+                        <option value="production">Production</option>
+                    </select>
+                </div>
+                <div class="field"><label class="f-label">Status</label>
+                    <select class="f-input" id="edit-status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="field"><label class="f-label">Modules</label>
+                    <div class="check-grid" id="edit-modules-grid"></div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('editClientModal')">Cancel</button>
+                <button class="btn btn-primary" id="confirmEditClientBtn" onclick="confirmEditClient()">
+                    <span class="btn-text">Save Changes</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Upgrade Client -->
+    <div class="modal-overlay" id="upgradeClientModal">
+        <div class="modal">
+            <div class="modal-title">Upgrade to Production</div>
+            <div class="modal-sub">Set an expiry date for the production account. Leave blank to default to 1 year from
+                today.</div>
+            <input type="hidden" id="upgradeClientEmail" />
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Account Type</label>
+                    <select class="f-input" id="upgrade-account-type">
+                        <option value="production">Production</option>
+                        <option value="trial">Trial</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Expires At</label>
+                    <input class="f-input" type="date" id="upgrade-expires-at" />
+                    <span class="f-sub">Leave blank to default to 1 year from today</span>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('upgradeClientModal')">Cancel</button>
+                <button class="btn btn-primary" id="confirmUpgradeClientBtn" onclick="confirmUpgradeClient()">
+                    <span class="btn-text">Upgrade to Production</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create Module -->
+    <div class="modal-overlay" id="createModuleModal">
+        <div class="modal">
+            <div class="modal-title">Create Module</div>
+            <div class="modal-sub">Add a new module that can be assigned to client accounts.</div>
+            <div id="create-module-alert" class="alert alert-error"></div>
+            <div class="field" style="margin-bottom:16px;">
+                <label class="f-label">Module Type</label>
+                <div class="module-type-toggle">
+                    <button class="module-type-btn active" id="type-btn-internal"
+                        onclick="setModuleType('internal')">Internal</button>
+                    <button class="module-type-btn" id="type-btn-external" onclick="setModuleType('external')">External
+                        Service</button>
+                </div>
+            </div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Module Name <em>*</em></label>
+                    <input class="f-input" type="text" id="new-module-name" placeholder="e.g. nlp.query" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Description</label>
+                    <textarea class="f-input" id="new-module-description" rows="3"
+                        style="height:auto;padding:8px 11px;resize:vertical;"
+                        placeholder="One or two sentences describing what this module does."></textarea>
+                </div>
+                <div class="field">
+                    <label class="f-label">Features</label>
+                    <textarea class="f-input" id="new-module-features" rows="5"
+                        style="height:auto;padding:8px 11px;resize:vertical;"
+                        placeholder="One feature per line e.g.&#10;Real-time email validation&#10;MX record lookup&#10;Bulk API support"></textarea>
+                    <span class="f-sub">One feature per line. Shown as bullet points on the landing page.</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Icon</label>
+                    <input class="f-input" type="text" id="new-module-icon"
+                        placeholder="e.g. database, mail-check, terminal-square" />
+                    <span class="f-sub">Lucide icon name. Reference: lucide.dev/icons</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Version</label>
+                    <input class="f-input" type="text" id="new-module-version" placeholder="e.g. 1.0.0" value="1.0.0" />
+                </div>
+                <div class="field">
+    <label class="f-label">Free Plan</label>
+    <select class="f-input" id="new-module-free-plan">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select>
+</div>
+<div class="field">
+    <label class="f-label">Trial Weeks</label>
+    <select class="f-input" id="new-module-trial-weeks">
+        <option value="1">1 Week</option>
+        <option value="2">2 Weeks</option>
+        <option value="3">3 Weeks</option>
+        <option value="4">4 Weeks</option>
+    </select>
+</div>
+<div class="field">
+    <label class="f-label">API Calls Allowed</label>
+    <input class="f-input" type="number" id="new-module-api-calls" placeholder="e.g. 1000" min="0" />
+</div>
+                <div class="field">
+                    <div class="check-item" id="new-module-default-check" onclick="toggleCheck(this)">
+                        <input type="checkbox" />
+                        <div class="check-box">✓</div>
+                        <span class="check-lbl">Set as Default Module</span>
+                    </div>
+                </div>
+                <!-- Internal: sidebar pages -->
+                <div class="field" id="new-module-sidebar-section">
+                    <label class="f-label">Sidebar Pages</label>
+                    <div class="check-grid" id="new-module-sidebar-grid">
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="dashboard" />
+                            <div class="check-box">✓</div><span class="check-lbl">Dashboard</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="datasources" />
+                            <div class="check-box">✓</div><span class="check-lbl">Datasources</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="datasource-configs" />
+                            <div class="check-box">✓</div><span class="check-lbl">Datasource Configs</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="intents" />
+                            <div class="check-box">✓</div><span class="check-lbl">Intents</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="intent-policies" />
+                            <div class="check-box">✓</div><span class="check-lbl">Intent Policies</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="validation-rules" />
+                            <div class="check-box">✓</div><span class="check-lbl">Validation Rules</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="vault" />
+                            <div class="check-box">✓</div><span class="check-lbl">Vault</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="users" />
+                            <div class="check-box">✓</div><span class="check-lbl">Users</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="playground" />
+                            <div class="check-box">✓</div><span class="check-lbl">Playground</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="rbac" />
+                            <div class="check-box">✓</div><span class="check-lbl">Roles & Permissions</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="api-keys" />
+                            <div class="check-box">✓</div><span class="check-lbl">API Keys</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="connected-inboxes" />
+                            <div class="check-box">✓</div><span class="check-lbl">Connected Inboxes</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- External: URL -->
+                <div class="field" id="new-module-external-section" style="display:none;">
+                    <label class="f-label">External Service URL <em>*</em></label>
+                    <input class="f-input" type="url" id="new-module-external-url"
+                        placeholder="https://your-service.com" />
+                    <span class="f-sub">Tenants will be redirected to this URL when they open this module.</span>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('createModuleModal')">Cancel</button>
+                <button class="btn btn-primary" id="createModuleBtn" onclick="createModule()"><span
+                        class="btn-text">Create Module</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Edit Module -->
+    <div class="modal-overlay" id="editModuleModal">
+        <div class="modal">
+            <div class="modal-title">Edit Module</div>
+            <input type="hidden" id="editModuleId" />
+            <div id="edit-module-alert" class="alert alert-error"></div>
+            <div class="field" style="margin-bottom:16px;">
+                <label class="f-label">Module Type</label>
+                <div class="module-type-toggle">
+                    <button class="module-type-btn active" id="edit-type-btn-internal"
+                        onclick="setEditModuleType('internal')">Internal</button>
+                    <button class="module-type-btn" id="edit-type-btn-external"
+                        onclick="setEditModuleType('external')">External Service</button>
+                </div>
+            </div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Module Name</label>
+                    <input class="f-input" type="text" id="edit-module-name" disabled />
+                </div>
+                <div class="field">
+                    <label class="f-label">Description</label>
+                    <textarea class="f-input" id="edit-module-description" rows="3"
+                        style="height:auto;padding:8px 11px;resize:vertical;"
+                        placeholder="One or two sentences describing what this module does."></textarea>
+                </div>
+                <div class="field">
+                    <label class="f-label">Features</label>
+                    <textarea class="f-input" id="edit-module-features" rows="5"
+                        style="height:auto;padding:8px 11px;resize:vertical;"
+                        placeholder="One feature per line"></textarea>
+                    <span class="f-sub">One feature per line. Shown as bullet points on the landing page.</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Icon</label>
+                    <input class="f-input" type="text" id="edit-module-icon"
+                        placeholder="e.g. database, mail-check, terminal-square" />
+                    <span class="f-sub">Lucide icon name. Reference: lucide.dev/icons</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Version</label>
+                    <input class="f-input" type="text" id="edit-module-version" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Free Plan</label>
+                    <select class="f-input" id="edit-module-free-plan">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Trial Weeks</label>
+                    <select class="f-input" id="edit-module-trial-weeks">
+                        <option value="1">1 Week</option>
+                        <option value="2">2 Weeks</option>
+                        <option value="3">3 Weeks</option>
+                        <option value="4">4 Weeks</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">API Calls Allowed</label>
+                    <input class="f-input" type="number" id="edit-module-api-calls" placeholder="e.g. 1000" min="0" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Status</label>
+                    <select class="f-input" id="edit-module-status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <div class="check-item" id="edit-module-default-check" onclick="toggleCheck(this)">
+                        <input type="checkbox" />
+                        <div class="check-box">✓</div>
+                        <span class="check-lbl">Default Module</span>
+                    </div>
+                </div>
+                <div class="field" id="edit-module-sidebar-section">
+                    <label class="f-label">Sidebar Pages</label>
+                    <div class="check-grid" id="edit-module-sidebar-grid">
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="dashboard" />
+                            <div class="check-box">✓</div><span class="check-lbl">Dashboard</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="datasources" />
+                            <div class="check-box">✓</div><span class="check-lbl">Datasources</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="datasource-configs" />
+                            <div class="check-box">✓</div><span class="check-lbl">Datasource Configs</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="intents" />
+                            <div class="check-box">✓</div><span class="check-lbl">Intents</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="intent-policies" />
+                            <div class="check-box">✓</div><span class="check-lbl">Intent Policies</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="validation-rules" />
+                            <div class="check-box">✓</div><span class="check-lbl">Validation Rules</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="vault" />
+                            <div class="check-box">✓</div><span class="check-lbl">Vault</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="users" />
+                            <div class="check-box">✓</div><span class="check-lbl">Users</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="playground" />
+                            <div class="check-box">✓</div><span class="check-lbl">Playground</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="rbac" />
+                            <div class="check-box">✓</div><span class="check-lbl">Roles & Permissions</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="api-keys" />
+                            <div class="check-box">✓</div><span class="check-lbl">API Keys</span>
+                        </div>
+                        <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"
+                                value="connected-inboxes" />
+                            <div class="check-box">✓</div><span class="check-lbl">Connected Inboxes</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="field" id="edit-module-external-section" style="display:none;">
+                    <label class="f-label">External Service URL <em>*</em></label>
+                    <input class="f-input" type="url" id="edit-module-external-url"
+                        placeholder="https://your-service.com" />
+                    <span class="f-sub">Tenants will be redirected to this URL when they open this module.</span>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('editModuleModal')">Cancel</button>
+                <button class="btn btn-primary" id="editModuleBtn" onclick="saveModuleEdit()"><span
+                        class="btn-text">Save Changes</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Delete Module -->
+    <div class="modal-overlay" id="deleteModuleModal">
+        <div class="modal">
+            <div class="modal-title">Delete Module</div>
+            <div class="modal-sub">Are you sure? Existing assignments will not be affected, but new clients won't be
+                able to select this module.</div>
+            <div class="danger-box" id="deleteModuleName">—</div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('deleteModuleModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteModuleBtn" onclick="confirmDeleteModule()"><span
+                        class="btn-text">Delete Module</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create Admin -->
+    <div class="modal-overlay" id="createAdminModal">
+        <div class="modal">
+            <div class="modal-title">Create Admin</div>
+            <div class="modal-sub">New admin will have access to Register Client and Manage Clients only.</div>
+            <div id="create-admin-alert" class="alert alert-error"></div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field"><label class="f-label">Email <em>*</em></label><input class="f-input" type="email"
+                        id="new-admin-username" placeholder="e.g. admin@company.com" /></div>
+                <div class="field"><label class="f-label">Password <em>*</em></label><input class="f-input"
+                        type="password" id="new-admin-password" placeholder="Min 8 characters" /></div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('createAdminModal')">Cancel</button>
+                <button class="btn btn-primary" id="createAdminBtn" onclick="createAdmin()"><span
+                        class="btn-text">Create Admin</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Edit Admin -->
+    <div class="modal-overlay" id="editAdminModal">
+        <div class="modal">
+            <div class="modal-title">Edit Admin</div>
+            <div class="modal-sub">Update password or toggle active status. Leave password blank to keep unchanged.
+            </div>
+            <input type="hidden" id="edit-admin-id" />
+            <div id="edit-admin-alert" class="alert alert-error"></div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field"><label class="f-label">New Password</label><input class="f-input" type="password"
+                        id="edit-admin-password" placeholder="Leave blank to keep current" /></div>
+                <div class="field"><label class="f-label">Status</label>
+                    <div><button class="btn btn-ghost" id="toggle-active-btn" onclick="toggleAdminStatus()"><span
+                                id="toggle-active-label">Toggle Status</span></button></div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('editAdminModal')">Cancel</button>
+                <button class="btn btn-primary" id="editAdminBtn" onclick="saveAdminEdit()"><span class="btn-text">Save
+                        Changes</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Delete Admin -->
+    <div class="modal-overlay" id="deleteAdminModal">
+        <div class="modal">
+            <div class="modal-title">Delete Admin</div>
+            <div class="modal-sub">This admin will permanently lose access. This cannot be undone.</div>
+            <div class="danger-box" id="deleteAdminUsername">—</div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('deleteAdminModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteAdminBtn" onclick="confirmDeleteAdmin()"><span
+                        class="btn-text">Delete Admin</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL: Create Group -->
+    <div class="modal-overlay" id="createGroupModal">
+        <div class="modal">
+            <div class="modal-title">Create Module Group</div>
+            <div class="modal-sub">Group modules together — they will appear under one tab in the portal.</div>
+            <div id="create-group-alert" class="alert alert-error"></div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Group Name <em>*</em></label>
+                    <input class="f-input" type="text" id="new-group-name" placeholder="e.g. Analytics Suite" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Description</label>
+                    <input class="f-input" type="text" id="new-group-description"
+                        placeholder="What does this group contain?" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Display Order</label>
+                    <input class="f-input" type="number" id="new-group-order" value="0" min="0" />
+                    <span class="f-sub">Lower numbers appear first in the portal topbar.</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Assign Modules</label>
+                    <div class="check-grid" id="create-group-modules-grid"></div>
+                    <span class="f-sub">Only modules not already in a group are shown.</span>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('createGroupModal')">Cancel</button>
+                <button class="btn btn-primary" id="createGroupBtn" onclick="createGroup()">
+                    <span class="btn-text">Create Group</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Edit Group -->
+    <div class="modal-overlay" id="editGroupModal">
+        <div class="modal">
+            <div class="modal-title">Edit Module Group</div>
+            <input type="hidden" id="editGroupId" />
+            <div id="edit-group-alert" class="alert alert-error"></div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Group Name <em>*</em></label>
+                    <input class="f-input" type="text" id="edit-group-name" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Description</label>
+                    <input class="f-input" type="text" id="edit-group-description" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Display Order</label>
+                    <input class="f-input" type="number" id="edit-group-order" min="0" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Status</label>
+                    <select class="f-input" id="edit-group-status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Assign Modules to this Group</label>
+                    <div class="check-grid" id="edit-group-modules-grid"></div>
+                    <span class="f-sub">Only modules not already in another group are shown.</span>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('editGroupModal')">Cancel</button>
+                <button class="btn btn-primary" id="editGroupBtn" onclick="saveGroupEdit()">
+                    <span class="btn-text">Save Changes</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Delete Group -->
+    <div class="modal-overlay" id="deleteGroupModal">
+        <div class="modal">
+            <div class="modal-title">Delete Module Group</div>
+            <div class="modal-sub">All modules in this group will become standalone. This cannot be undone.</div>
+            <div class="danger-box" id="deleteGroupName">—</div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('deleteGroupModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteGroupBtn" onclick="confirmDeleteGroup()">
+                    <span class="btn-text">Delete Group</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create Driver -->
+    <!-- MODAL: Create Driver -->
+    <div class="modal-overlay" id="createDstypeModal">
+        <div class="modal" style="max-width:520px;">
+            <div class="modal-title">Add Driver</div>
+            <div class="modal-sub">Define a new driver definition.</div>
+            <div id="create-dstype-alert" class="alert alert-error"></div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Canonical Name <em>*</em></label>
+                    <input class="f-input" type="text" id="new-dst-canonical" placeholder="e.g. mysql" />
+                    <span class="f-sub">Unique identifier, lowercase with underscores</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Display Name <em>*</em></label>
+                    <input class="f-input" type="text" id="new-dst-display" placeholder="e.g. MySQL" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Protocol <em>*</em></label>
+                    <select class="f-input" id="new-dst-protocol">
+                        <option value="sql">sql</option>
+                        <option value="soql">soql</option>
+                        <option value="rest">rest</option>
+                        <option value="graphql">graphql</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Dialect Token <em>*</em></label>
+                    <input class="f-input" type="text" id="new-dst-dialect" placeholder="e.g. mysql" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Implementation Key <em>*</em></label>
+                    <input class="f-input" type="text" id="new-dst-impl" placeholder="e.g. mysql" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Auth Style</label>
+                    <select class="f-input" id="new-dst-auth">
+                        <option value="broker">broker</option>
+                        <option value="vault_oauth2_refresh_token">vault_oauth2_refresh_token</option>
+                        <option value="basic">basic</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Required Fields (comma separated)</label>
+                    <input class="f-input" type="text" id="new-dst-required"
+                        placeholder="e.g. host,port,database,username,password" />
+                    <span class="f-sub">These are shown to tenant as credential fields</span>
+                </div>
+                <div class="field">
+                    <label class="f-label">Optional Fields (comma separated)</label>
+                    <input class="f-input" type="text" id="new-dst-optional"
+                        placeholder="e.g. timeout_seconds,max_workers" />
+                    <span class="f-sub">These are shown to tenant as optional credential fields</span>
+                </div>
+                <div class="field">
+                    <div class="check-item checked" id="new-dst-active-check" onclick="toggleCheck(this)">
+                        <input type="checkbox" checked />
+                        <div class="check-box">✓</div>
+                        <span class="check-lbl">Active (visible to tenants)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('createDstypeModal')">Cancel</button>
+                <button class="btn btn-primary" id="createDstypeBtn" onclick="createDstype()">
+                    <span class="btn-text">Create Driver</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Edit Driver -->
+    <div class="modal-overlay" id="editDstypeModal">
+        <div class="modal" style="max-width:520px;">
+            <div class="modal-title">Edit Driver</div>
+            <input type="hidden" id="edit-dst-id" />
+            <div id="edit-dstype-alert" class="alert alert-error"></div>
+            <div class="form-grid col1" style="gap:12px;">
+                <div class="field">
+                    <label class="f-label">Canonical Name</label>
+                    <input class="f-input" type="text" id="edit-dst-canonical" disabled />
+                </div>
+                <div class="field">
+                    <label class="f-label">Display Name <em>*</em></label>
+                    <input class="f-input" type="text" id="edit-dst-display" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Protocol <em>*</em></label>
+                    <select class="f-input" id="edit-dst-protocol">
+                        <option value="sql">sql</option>
+                        <option value="soql">soql</option>
+                        <option value="rest">rest</option>
+                        <option value="graphql">graphql</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Dialect Token <em>*</em></label>
+                    <input class="f-input" type="text" id="edit-dst-dialect" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Implementation Key <em>*</em></label>
+                    <input class="f-input" type="text" id="edit-dst-impl" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Auth Style</label>
+                    <select class="f-input" id="edit-dst-auth">
+                        <option value="broker">broker</option>
+                        <option value="vault_oauth2_refresh_token">vault_oauth2_refresh_token</option>
+                        <option value="basic">basic</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="f-label">Required Fields (comma separated)</label>
+                    <input class="f-input" type="text" id="edit-dst-required" />
+                </div>
+                <div class="field">
+                    <label class="f-label">Optional Fields (comma separated)</label>
+                    <input class="f-input" type="text" id="edit-dst-optional" />
+                </div>
+                <div class="field">
+                    <div class="check-item" id="edit-dst-active-check" onclick="toggleCheck(this)">
+                        <input type="checkbox" />
+                        <div class="check-box">✓</div>
+                        <span class="check-lbl">Active</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('editDstypeModal')">Cancel</button>
+                <button class="btn btn-primary" id="editDstypeBtn" onclick="saveDstypeEdit()">
+                    <span class="btn-text">Save Changes</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Manage Aliases -->
+    <div class="modal-overlay" id="fieldsModal" style="align-items:flex-start;padding-top:40px;">
+        <div class="modal" style="max-width:560px;">
+            <div class="modal-title">Manage Aliases</div>
+            <div class="modal-sub" id="fields-modal-sub">Aliases for this driver</div>
+            <input type="hidden" id="fields-dst-id" />
+            <div id="fields-alert" class="alert alert-error"></div>
+            <div class="tbl-wrap" style="margin-bottom:16px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alias Name</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fields-tbody">
+                        <tr class="loading-row">
+                            <td colspan="4">Loading aliases…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="border-top:1px solid var(--b1);padding-top:16px;">
+                <div style="font-size:12px;font-weight:600;color:var(--tx1);margin-bottom:12px;">Add New Alias</div>
+                <div id="add-field-alert" class="alert alert-error"></div>
+                <div class="form-grid" style="gap:10px;">
+                    <div class="field">
+                        <label class="f-label">Alias Name <em>*</em></label>
+                        <input class="f-input" type="text" id="new-field-name" placeholder="e.g. postgresql" />
+                    </div>
+                    <div class="field">
+                        <label class="f-label">Alias Type <em>*</em></label>
+                        <select class="f-input" id="new-field-type">
+                            <option value="canonical">canonical</option>
+                            <option value="datasource_type">datasource_type</option>
+                            <option value="legacy">legacy</option>
+                            <option value="driver_family">driver_family</option>
+                            <option value="ui">ui</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+                    <button class="btn btn-primary" id="addFieldBtn" onclick="addField()">
+                        <span class="btn-text">+ Add Alias</span>
+                        <div class="spinner"></div>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('fieldsModal')">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Delete Driver -->
+    <div class="modal-overlay" id="deleteDstypeModal">
+        <div class="modal">
+            <div class="modal-title">Delete Driver</div>
+            <div class="modal-sub">This will permanently delete the driver and all its aliases. This cannot be undone.
+            </div>
+            <div class="danger-box" id="delete-dst-label">—</div>
+            <div class="modal-foot">
+                <button class="btn btn-ghost" onclick="closeModal('deleteDstypeModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteDstypeBtn" onclick="confirmDeleteDstype()">
+                    <span class="btn-text">Delete Driver</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API = window.location.origin;
+        let currentAdmin = null, allClients = [], allAdmins = [], allModules = [];
+        const clientMap = {};
+        let clientToDelete = null, adminToDelete = null, editAdminCurrentStatus = true, moduleToDelete = null;
+
+        async function init() {
+            try {
+                const res = await fetch(`${API}/admin/auth/me`, { credentials: 'include' });
+                const d = await res.json();
+                if (!d.authenticated) { window.location.replace('http://localhost:7000/realms/flowengine/protocol/openid-connect/auth?client_id=agentryx-app&response_type=code&scope=openid email profile&redirect_uri=http://localhost:3000/auth/keycloak/callback'); return; }
+                currentAdmin = d; renderAdminInfo(d);
+                if (d.role === 'superadmin') {
+                    document.getElementById('adminsTab').style.display = 'flex';
+                    document.getElementById('modulesTab').style.display = 'flex';
+                    document.getElementById('dstypesTab').style.display = 'flex';
+                    document.getElementById('moduleGroupsTab').style.display = 'flex';
+                }
+                await loadModulesAndRoles(); await loadClients();
+            } catch (_) { window.location.replace('http://localhost:7000/realms/flowengine/protocol/openid-connect/auth?client_id=agentryx-app&response_type=code&scope=openid email profile&redirect_uri=http://localhost:3000/auth/keycloak/callback'); }
+        }
+
+        function renderAdminInfo(d) {
+            document.getElementById('adminAvatar').textContent = d.username.charAt(0).toUpperCase();
+            document.getElementById('adminUsername').textContent = d.username;
+            const r = document.getElementById('adminRole');
+            r.textContent = d.role === 'superadmin' ? 'Super Admin' : 'Admin';
+            r.className = `admin-role ${d.role}`;
+        }
+
+        setInterval(async () => {
+            try { const r = await fetch(`${API}/admin/auth/me`, { credentials: 'include', cache: 'no-store' }); const d = await r.json(); if (!d.authenticated) window.location.replace('http://localhost:7000/realms/flowengine/protocol/openid-connect/auth?client_id=agentryx-app&response_type=code&scope=openid email profile&redirect_uri=http://localhost:3000/auth/keycloak/callback'); }
+            catch (_) { window.location.replace('http://localhost:7000/realms/flowengine/protocol/openid-connect/auth?client_id=agentryx-app&response_type=code&scope=openid email profile&redirect_uri=http://localhost:3000/auth/keycloak/callback'); }
+        }, 30000);
+
+        async function doLogout() { await fetch(`${API}/admin/auth/logout`, { method: 'POST', credentials: 'include' }); window.location.replace('http://localhost:7000/realms/flowengine/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:8001&client_id=agentryx-app'); }
+        const tabMeta = {
+            register: { title: 'Register Client', sub: 'Create a new client account and issue an API key' },
+            clients: { title: 'Manage Clients', sub: 'View, search and manage all client accounts' },
+            modules: { title: 'Modules Management', sub: 'Configure and manage platform modules' },
+            admins: { title: 'Manage Admins', sub: 'Superadmin — add, edit and remove admin users' },
+            'datasource-types': { title: 'Datasource Types', sub: 'Manage supported datasource types and their connection fields' },
+            'module-groups': { title: 'Module Groups', sub: 'Group modules together to appear under a single tab in the portal' },
+        };
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-btn').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(`panel-${tab}`).classList.add('active');
+            document.getElementById('pageTitle').textContent = tabMeta[tab].title;
+            document.getElementById('pageSub').textContent = tabMeta[tab].sub;
+            if (tab === 'clients') loadClients();
+            if (tab === 'modules') loadModules();
+            if (tab === 'admins') loadAdmins();
+            if (tab === 'datasource-types') loadDstypes();
+            if (tab === 'module-groups') loadGroups();
+        }
+
+        async function loadModulesAndRoles() {
+            try {
+                const res = await fetch(`${API}/admin/modules`, { credentials: 'include' });
+                const d = await res.json();
+                allModules = d.modules || [];
+                const moduleNames = allModules.filter(m => m.status === 'active').map(m => m.name);
+                renderCheckGrid('modules-grid', moduleNames, 'mod');
+            } catch (_) {
+                renderCheckGrid('modules-grid', [], 'mod');
+            }
+        }
+
+        function renderCheckGrid(id, items, prefix) {
+            const defaults = ['basic', 'email_validate'];
+            document.getElementById(id).innerHTML = items.map(item => {
+                const checked = defaults.includes(item);
+                return `<div class="check-item ${checked ? 'checked' : ''}" id="${prefix}-${item}" onclick="toggleCheck(this)">
+            <input type="checkbox" value="${item}" ${checked ? 'checked' : ''}/>
+            <div class="check-box">✓</div>
+            <span class="check-lbl">${item}</span>
+        </div>`;
+            }).join('');
+        }
+
+        function toggleCheck(el) { el.classList.toggle('checked'); el.querySelector('input').checked = el.classList.contains('checked'); }
+        function getChecked(p) { return [...document.querySelectorAll(`[id^="${p}-"] input:checked`)].map(i => i.value); }
+        function resetCheckGrid(p) { document.querySelectorAll(`[id^="${p}-"]`).forEach(el => { el.classList.remove('checked'); el.querySelector('input').checked = false; }); }
+
+        function onAccountTypeChange() { }
+
+        async function registerClient() {
+            const email = document.getElementById('reg-email').value.trim();
+            const modules = getChecked('mod');
+            const account_type = document.getElementById('reg-account-type').value;
+            const expires_at = document.getElementById('reg-expires-at').value;
+            const btn = document.getElementById('reg-btn');
+            hideAlert('reg-alert-success'); hideAlert('reg-alert-error');
+            if (!email) { showAlert('reg-alert-error', 'Please enter a client email address.'); return; }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('reg-alert-error', 'Please enter a valid email address.'); return; }
+            if (!modules.length) { showAlert('reg-alert-error', 'Please select at least one module.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const body = { email, modules, account_type };
+                if (expires_at) body.expires_at = expires_at;
+                const res = await fetch(`${API}/api/accounts`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(body) });
+                const d = await res.json();
+                if (res.ok) {
+                    showAlert('reg-alert-success', `Account created for ${d.email}. Tenant ID: ${d.tenant_id}`);
+                    document.getElementById('reg-email').value = '';
+                    document.getElementById('reg-expires-at').value = '';
+                    resetCheckGrid('mod');
+                    allClients = [];
+                    await loadClients();
+                    switchTab('clients');
+                }
+                else showAlert('reg-alert-error', d.detail || 'Failed to create account.');
+            } catch (_) { showAlert('reg-alert-error', 'Could not reach the server. Please try again.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        async function loadClients() {
+            try {
+                const res = await fetch(`${API}/api/accounts`, { credentials: 'include' });
+                const d = await res.json(); allClients = d.accounts || []; allClients.forEach(c => clientMap[c.email] = c); renderClientsTable(allClients); updateClientStats(allClients);
+            } catch (_) { showAlert('clients-alert-error', 'Failed to load clients.'); }
+        }
+
+        function updateClientStats(c) {
+            document.getElementById('stat-total').textContent = c.length;
+            document.getElementById('stat-active').textContent = c.filter(x => x.status === 'active').length;
+        }
+
+        function renderClientsTable(clients) {
+            const tbody = document.getElementById('clients-tbody');
+            if (!clients.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-ico">👥</div><div class="empty-title">No clients yet</div><div class="empty-sub">Register your first client using the Register Client tab</div></div></td></tr>`; return; }
+            tbody.innerHTML = clients.map(c => `
+      <tr>
+        <td class="hi">${c.email}</td>
+        <td><span class="mono">${c.tenant_id}</span></td>
+        <td><div class="tag-list">${(c.modules || []).map(m => `<span class="tag">${m}</span>`).join('')}</div></td>
+        <td><span class="badge ${c.status === 'active' ? 'badge-green' : 'badge-red'}">${c.status}</span></td>
+        <td><span class="badge ${c.account_type === 'production' ? 'badge-blue' : 'badge-amber'}">${c.account_type || '—'}</span></td>
+        <td><div class="t-actions">
+          <button class="t-btn t-edit" onclick="openEditClientModal('${c.email}')">Edit</button>
+          <button class="t-btn t-upgrade" onclick="openUpgradeClientModal('${c.email}', '${c.account_type}')">Upgrade</button>
+          <button class="t-btn t-del" onclick="openDeleteClientModal('${c.email}')">Delete</button>
+        </div></td>
+      </tr>`).join('');
+        }
+
+        function filterClients() {
+            const q = document.getElementById('clients-search').value.toLowerCase();
+            renderClientsTable(allClients.filter(c => c.email.toLowerCase().includes(q) || c.tenant_id.toLowerCase().includes(q)));
+        }
+
+        function openDeleteClientModal(email) { clientToDelete = email; document.getElementById('deleteClientEmail').textContent = email; openModal('deleteClientModal'); }
+        async function confirmDeleteClient() {
+            if (!clientToDelete) return;
+            const btn = document.getElementById('confirmDeleteClientBtn'); btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/api/accounts/${encodeURIComponent(clientToDelete)}`, { method: 'DELETE', credentials: 'include' });
+                if (res.ok) { closeModal('deleteClientModal'); await loadClients(); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to delete client.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; clientToDelete = null; }
+        }
+
+        async function openEditClientModal(email) {
+            const client = clientMap[email];
+            if (!client) return;
+            document.getElementById('editClientOriginalEmail').value = email;
+            document.getElementById('edit-email').value = client.email;
+            document.getElementById('edit-password').value = '';
+            document.getElementById('edit-account-type').value = client.account_type || 'trial';
+            document.getElementById('edit-status').value = client.status || 'active';
+            const [modRes, assignedRes] = await Promise.all([
+                fetch(`${API}/admin/modules`, { credentials: 'include' }),
+                fetch(`${API}/admin/modules/tenant/${client.tenant_id}`, { credentials: 'include' })
+            ]);
+            const allModulesData = (await modRes.json()).modules || [];
+            const assignedData = await assignedRes.json();
+            const assignedIds = new Set((assignedData || []).map(a => String(a.module_id)));
+            document.getElementById('edit-modules-grid').innerHTML = allModulesData.map(m => {
+                const checked = assignedIds.has(String(m.id));
+                return `<div class="check-item ${checked ? 'checked' : ''}" id="emod-${m.id}" onclick="toggleCheck(this)">
+                        <input type="checkbox" value="${m.id}" ${checked ? 'checked' : ''}/>
+                        <div class="check-box">✓</div><span class="check-lbl">${m.name}</span></div>`;
+            }).join('');
+            openModal('editClientModal');
+        }
+
+        async function confirmEditClient() {
+            const originalEmail = document.getElementById('editClientOriginalEmail').value;
+            const btn = document.getElementById('confirmEditClientBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const body = {
+                    new_email: document.getElementById('edit-email').value.trim(),
+                    password: document.getElementById('edit-password').value,
+                    account_type: document.getElementById('edit-account-type').value,
+                    status: document.getElementById('edit-status').value,
+                    modules: [...document.querySelectorAll('#edit-modules-grid input:checked')].map(i => i.value),
+                };
+                const res = await fetch(`${API}/api/accounts/${encodeURIComponent(originalEmail)}/edit`, {
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', body: JSON.stringify(body)
+                });
+                if (res.ok) { closeModal('editClientModal'); await loadClients(); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to update client.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openUpgradeClientModal(email, currentType) {
+            document.getElementById('upgradeClientEmail').value = email;
+            document.getElementById('upgrade-expires-at').value = '';
+            document.getElementById('upgrade-account-type').value = currentType === 'trial' ? 'production' : 'trial';
+            openModal('upgradeClientModal');
+        }
+
+        async function confirmUpgradeClient() {
+            const email = document.getElementById('upgradeClientEmail').value;
+            const expires_at = document.getElementById('upgrade-expires-at').value;
+            const btn = document.getElementById('confirmUpgradeClientBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const body = { account_type: document.getElementById('upgrade-account-type').value };
+                if (expires_at) body.expires_at = expires_at;
+                const res = await fetch(`${API}/api/accounts/${encodeURIComponent(email)}/upgrade`, {
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', body: JSON.stringify(body)
+                });
+                if (res.ok) { closeModal('upgradeClientModal'); await loadClients(); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to upgrade client.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        async function loadModules() {
+            try {
+                const res = await fetch(`${API}/admin/modules`, { credentials: 'include' });
+                const d = await res.json();
+                allModules = d.modules || [];
+                renderModulesTable(allModules);
+                updateModulesStats(allModules);
+            } catch (err) { showAlert('modules-alert-error', 'Failed to load modules.'); }
+        }
+
+        function updateModulesStats(modules) {
+            document.getElementById('stat-modules-total').textContent = modules.length;
+            document.getElementById('stat-modules-active').textContent = modules.filter(m => m.status === 'active').length;
+            document.getElementById('stat-modules-default').textContent = modules.filter(m => m.is_default).length;
+        }
+
+        function renderModulesTable(modules) {
+            const tbody = document.getElementById('modules-tbody');
+            if (!modules.length) {
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="empty-ico">📦</div><div class="empty-title">No modules yet</div><div class="empty-sub">Create your first module using the + Add Module button</div></div></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = modules.map(m => `
+    <tr>
+        <td class="hi">${m.name}</td>
+        <td>${m.description || '—'}</td>
+        <td class="mono">${m.version || '—'}</td>
+        <td><span class="badge ${m.status === 'active' ? 'badge-green' : m.status === 'inactive' ? 'badge-amber' : 'badge-red'}">${m.status}</span></td>
+        <td><span class="badge ${m.is_default ? 'badge-blue' : 'badge-amber'}">${m.is_default ? 'Default' : 'Optional'}</span></td>
+        <td class="mono">${m.created_at ? new Date(m.created_at).toLocaleDateString() : '—'}</td>
+        <td><div class="t-actions">
+                <button class="t-btn t-edit" onclick="openEditModuleModal('${m.id}')">Edit</button>
+                <button class="t-btn t-del" onclick="openDeleteModuleModal('${m.id}', '${m.name}')">Delete</button>
+            </div>
+        </td>
+    </tr>`).join('');
+        }
+
+        function openCreateModuleModal() {
+            document.getElementById('new-module-name').value = '';
+            document.getElementById('new-module-description').value = '';
+            document.getElementById('new-module-features').value = '';
+            document.getElementById('new-module-icon').value = '';
+            document.getElementById('new-module-version').value = '1.0.0';
+            document.getElementById('new-module-free-plan').value = 'no';
+document.getElementById('new-module-trial-weeks').value = '2';
+document.getElementById('new-module-api-calls').value = '';
+            document.getElementById('new-module-external-url').value = '';
+            document.getElementById('new-module-default-check').classList.remove('checked');
+            document.getElementById('new-module-default-check').querySelector('input').checked = false;
+            document.querySelectorAll('#new-module-sidebar-grid .check-item').forEach(el => { el.classList.remove('checked'); el.querySelector('input').checked = false; });
+            setModuleType('internal');
+            hideAlert('create-module-alert');
+            openModal('createModuleModal');
+        }
+        function setEditModuleType(type) {
+            document.getElementById('edit-type-btn-internal').classList.toggle('active', type === 'internal');
+            document.getElementById('edit-type-btn-external').classList.toggle('active', type === 'external');
+            document.getElementById('edit-module-sidebar-section').style.display = type === 'internal' ? '' : 'none';
+            document.getElementById('edit-module-external-section').style.display = type === 'external' ? '' : 'none';
+        }
+        function setModuleType(type) {
+            document.getElementById('type-btn-internal').classList.toggle('active', type === 'internal');
+            document.getElementById('type-btn-external').classList.toggle('active', type === 'external');
+            document.getElementById('new-module-sidebar-section').style.display = type === 'internal' ? '' : 'none';
+            document.getElementById('new-module-external-section').style.display = type === 'external' ? '' : 'none';
+        }
+
+        async function createModule() {
+            const name = document.getElementById('new-module-name').value.trim();
+            const description = document.getElementById('new-module-description').value.trim();
+            const featuresRaw = document.getElementById('new-module-features').value.trim();
+            const features = featuresRaw ? featuresRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+            const icon = document.getElementById('new-module-icon').value.trim();
+            const version = document.getElementById('new-module-version').value.trim();
+            const is_default = document.getElementById('new-module-default-check').querySelector('input').checked;
+            const free_plan = document.getElementById('new-module-free-plan').value === 'yes';
+            const trial_weeks = parseInt(document.getElementById('new-module-trial-weeks').value);
+            const api_calls_allowed = parseInt(document.getElementById('new-module-api-calls').value) || 0;
+            const isExternal = document.getElementById('type-btn-external').classList.contains('active');
+            const external_url = document.getElementById('new-module-external-url').value.trim();
+            const sidebar_items = isExternal ? [] : [...document.querySelectorAll('#new-module-sidebar-grid input:checked')].map(i => i.value);
+            const btn = document.getElementById('createModuleBtn');
+            hideAlert('create-module-alert');
+            if (!name) { showAlert('create-module-alert', 'Module name is required.'); return; }
+            if (isExternal && !external_url) { showAlert('create-module-alert', 'External service URL is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const body = { name, description: description || "", features, icon: icon || null, version, is_default, sidebar_items, free_plan, trial_weeks, api_calls_allowed };
+                if (isExternal) body.external_url = external_url;
+                const res = await fetch(`${API}/admin/modules`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                const d = await res.json();
+                if (res.ok) { closeModal('createModuleModal'); await loadModules(); }
+                else { showAlert('create-module-alert', d.detail || 'Failed to create module.'); }
+            } catch (err) { showAlert('create-module-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        async function openEditModuleModal(id) {
+            const module = allModules.find(m => m.id === id);
+            if (!module) return;
+            document.getElementById('editModuleId').value = id;
+            document.getElementById('edit-module-name').value = module.name;
+            document.getElementById('edit-module-description').value = module.description || '';
+            document.getElementById('edit-module-features').value = (module.features || []).join('\n');
+            document.getElementById('edit-module-icon').value = module.icon || '';
+            document.getElementById('edit-module-version').value = module.version || '';
+            document.getElementById('edit-module-status').value = module.status || 'active';
+            const defaultCheck = document.getElementById('edit-module-default-check');
+            if (module.is_default) { defaultCheck.classList.add('checked'); defaultCheck.querySelector('input').checked = true; }
+            else { defaultCheck.classList.remove('checked'); defaultCheck.querySelector('input').checked = false; }
+            document.querySelectorAll('#edit-module-sidebar-grid .check-item').forEach(el => {
+                const val = el.querySelector('input').value;
+                const checked = (module.sidebar_items || []).includes(val);
+                el.classList.toggle('checked', checked);
+                el.querySelector('input').checked = checked;
+            });
+            const isExternal = !!module.external_url;
+            setEditModuleType(isExternal ? 'external' : 'internal');
+            if (isExternal) document.getElementById('edit-module-external-url').value = module.external_url || '';
+            document.getElementById('edit-module-free-plan').value = module.free_plan ? 'yes' : 'no';
+            document.getElementById('edit-module-trial-weeks').value = module.trial_weeks || '2';
+            document.getElementById('edit-module-api-calls').value = module.api_calls_allowed || '';
+            hideAlert('edit-module-alert');
+            openModal('editModuleModal');
+        }
+
+        async function saveModuleEdit() {
+            const id = document.getElementById('editModuleId').value;
+            const description = document.getElementById('edit-module-description').value.trim();
+            const featuresRaw = document.getElementById('edit-module-features').value.trim();
+            const features = featuresRaw ? featuresRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+            const icon = document.getElementById('edit-module-icon').value.trim();
+            const version = document.getElementById('edit-module-version').value.trim();
+            const status = document.getElementById('edit-module-status').value;
+            const is_default = document.getElementById('edit-module-default-check').querySelector('input').checked;
+            const isExternal = document.getElementById('edit-type-btn-external').classList.contains('active');
+            const external_url = document.getElementById('edit-module-external-url').value.trim();
+            const sidebar_items = isExternal ? [] : [...document.querySelectorAll('#edit-module-sidebar-grid input:checked')].map(i => i.value);
+            const btn = document.getElementById('editModuleBtn');
+            hideAlert('edit-module-alert');
+            if (isExternal && !external_url) { showAlert('edit-module-alert', 'External service URL is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const free_plan = document.getElementById('edit-module-free-plan').value === 'yes';
+                const trial_weeks = parseInt(document.getElementById('edit-module-trial-weeks').value);
+                const api_calls_allowed = parseInt(document.getElementById('edit-module-api-calls').value) || 0;
+                const body = { description, features, icon: icon || null, version, status, is_default, sidebar_items, free_plan, trial_weeks, api_calls_allowed };
+                if (isExternal) body.external_url = external_url;
+                else body.external_url = null;
+                const res = await fetch(`${API}/admin/modules/${id}`, {
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+                const d = await res.json();
+                if (res.ok) { closeModal('editModuleModal'); await loadModules(); }
+                else { showAlert('edit-module-alert', d.detail || 'Failed to update module.'); }
+            } catch (err) { showAlert('edit-module-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openDeleteModuleModal(id, name) {
+            moduleToDelete = id;
+            document.getElementById('deleteModuleName').textContent = name;
+            openModal('deleteModuleModal');
+        }
+
+        async function confirmDeleteModule() {
+            if (!moduleToDelete) return;
+            const btn = document.getElementById('confirmDeleteModuleBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/modules/${moduleToDelete}`, { method: 'DELETE', credentials: 'include' });
+                if (res.ok) { closeModal('deleteModuleModal'); await loadModules(); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to delete module.'); }
+            } catch (err) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; moduleToDelete = null; }
+        }
+
+        async function loadAdmins() {
+            try { const res = await fetch(`${API}/admin/admins`, { credentials: 'include' }); allAdmins = await res.json(); renderAdminsTable(allAdmins); }
+            catch (_) { showAdminsAlert('error', 'Failed to load admins.'); }
+        }
+
+        function renderAdminsTable(admins) {
+            const tbody = document.getElementById('admins-tbody');
+            if (!admins.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-ico">🔐</div><div class="empty-title">No admins yet</div><div class="empty-sub">Add your first admin using the button above</div></div></td></tr>`; return; }
+            tbody.innerHTML = admins.map(a => `
+      <tr>
+        <td class="hi">${a.username}</td>
+        <td><span class="badge ${a.role === 'superadmin' ? 'badge-amber' : 'badge-blue'}">${a.role}</span></td>
+        <td><span class="badge ${a.is_active ? 'badge-green' : 'badge-red'}">${a.is_active ? 'Active' : 'Disabled'}</span></td>
+        <td class="mono">${a.created_by_username || '—'}</td>
+        <td class="mono">${a.created_at ? new Date(a.created_at).toLocaleDateString() : '—'}</td>
+        <td>${a.role !== 'superadmin' ? `<div class="t-actions"><button class="t-btn t-edit" onclick="openEditAdminModal('${a.id}',${a.is_active})">Edit</button><button class="t-btn t-del" onclick="openDeleteAdminModal('${a.id}','${a.username}')">Delete</button></div>` : '<span class="protected-lbl">Protected</span>'}</td>
+      </tr>`).join('');
+        }
+
+        function openCreateAdminModal() { document.getElementById('new-admin-username').value = ''; document.getElementById('new-admin-password').value = ''; hideAlert('create-admin-alert'); openModal('createAdminModal'); }
+
+        async function createAdmin() {
+            const username = document.getElementById('new-admin-username').value.trim();
+            const password = document.getElementById('new-admin-password').value;
+            const btn = document.getElementById('createAdminBtn'); hideAlert('create-admin-alert');
+            if (!username || !username.includes('@')) { showAlert('create-admin-alert', 'Please enter a valid email address.'); return; }
+            if (!password || password.length < 8) { showAlert('create-admin-alert', 'Password must be at least 8 characters.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/admins`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify({ username, password }) });
+                const d = await res.json();
+                if (res.ok) { closeModal('createAdminModal'); showAdminsAlert('success', `Admin "${username}" created successfully.`); await loadAdmins(); }
+                else showAlert('create-admin-alert', d.detail || 'Failed to create admin.');
+            } catch (_) { showAlert('create-admin-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openEditAdminModal(id, isActive) {
+            document.getElementById('edit-admin-id').value = id; document.getElementById('edit-admin-password').value = '';
+            editAdminCurrentStatus = isActive; updateToggleBtn(isActive); hideAlert('edit-admin-alert'); openModal('editAdminModal');
+        }
+
+        function updateToggleBtn(active) {
+            const btn = document.getElementById('toggle-active-btn'), lbl = document.getElementById('toggle-active-label');
+            if (active) { lbl.textContent = 'Disable Admin'; btn.className = 'btn btn-danger'; }
+            else { lbl.textContent = 'Enable Admin'; btn.className = 'btn btn-ghost'; }
+        }
+
+        function toggleAdminStatus() { editAdminCurrentStatus = !editAdminCurrentStatus; updateToggleBtn(editAdminCurrentStatus); }
+
+        async function saveAdminEdit() {
+            const id = document.getElementById('edit-admin-id').value, pw = document.getElementById('edit-admin-password').value;
+            const btn = document.getElementById('editAdminBtn'); hideAlert('edit-admin-alert');
+            if (pw && pw.length < 8) { showAlert('edit-admin-alert', 'Password must be at least 8 characters.'); return; }
+            const body = { is_active: editAdminCurrentStatus }; if (pw) body.password = pw;
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/admins/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(body) });
+                const d = await res.json();
+                if (res.ok) { closeModal('editAdminModal'); showAdminsAlert('success', 'Admin updated successfully.'); await loadAdmins(); }
+                else showAlert('edit-admin-alert', d.detail || 'Failed to update admin.');
+            } catch (_) { showAlert('edit-admin-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openDeleteAdminModal(id, username) { adminToDelete = id; document.getElementById('deleteAdminUsername').textContent = username; openModal('deleteAdminModal'); }
+
+        async function confirmDeleteAdmin() {
+            if (!adminToDelete) return;
+            const btn = document.getElementById('confirmDeleteAdminBtn'); btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/admins/${adminToDelete}`, { method: 'DELETE', credentials: 'include' });
+                if (res.ok) { closeModal('deleteAdminModal'); showAdminsAlert('success', 'Admin deleted successfully.'); await loadAdmins(); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to delete admin.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; adminToDelete = null; }
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+        function showAlert(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+        function hideAlert(id) { const el = document.getElementById(id); el.textContent = ''; el.classList.remove('show'); }
+        function showAdminsAlert(type, msg) { const el = document.getElementById('admins-alert'); el.className = `alert alert-${type} show`; el.textContent = msg; setTimeout(() => el.classList.remove('show'), 4000); }
+        // ── Datasource Types ──────────────────────────────────────────────────────────
+        let allDstypes = [], dstypeToDelete = null;
+
+        function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+        async function loadDstypes() {
+            try {
+                const res = await fetch(`${API}/admin/datasource-types`, { credentials: 'include' });
+                allDstypes = await res.json();
+                renderDstypesTable(allDstypes);
+                updateDstypeStats(allDstypes);
+            } catch (_) { showDstAlert('error', 'Failed to load drivers.'); }
+        }
+
+        function updateDstypeStats(types) {
+            document.getElementById('stat-dst-total').textContent = types.length;
+            document.getElementById('stat-dst-active').textContent = types.filter(t => t.is_active).length;
+            document.getElementById('stat-dst-inactive').textContent = types.filter(t => !t.is_active).length;
+        }
+
+        function renderDstypesTable(types) {
+            const tbody = document.getElementById('dst-tbody');
+            if (!types.length) {
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="empty-ico">🗄️</div><div class="empty-title">No drivers yet</div><div class="empty-sub">Add your first driver using the + Add Driver button</div></div></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = types.map(t => `
+        <tr>
+            <td class="hi"><span class="mono">${escHtml(t.canonical_name)}</span></td>
+            <td>${escHtml(t.display_name)}</td>
+            <td><span class="badge badge-blue">${escHtml(t.protocol)}</span></td>
+            <td><span class="badge badge-amber">${escHtml(t.auth_style)}</span></td>
+            <td><span class="badge badge-blue" style="cursor:pointer;" onclick="openFieldsModal(${t.driver_id},'${escHtml(t.display_name)}')">Aliases</span></td>
+            <td><span class="badge ${t.is_active ? 'badge-green' : 'badge-red'}">${t.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td><div class="t-actions">
+                <button class="t-btn t-edit" onclick="openEditDstypeModal(${t.driver_id})">Edit</button>
+                <button class="t-btn t-edit" onclick="openFieldsModal(${t.driver_id},'${escHtml(t.display_name)}')">Aliases</button>
+                <button class="t-btn t-del" onclick="openDeleteDstypeModal(${t.driver_id},'${escHtml(t.display_name)}')">Delete</button>
+            </div></td>
+        </tr>`).join('');
+        }
+
+        function openCreateDstypeModal() {
+            document.getElementById('new-dst-canonical').value = '';
+            document.getElementById('new-dst-display').value = '';
+            document.getElementById('new-dst-protocol').value = 'sql';
+            document.getElementById('new-dst-dialect').value = '';
+            document.getElementById('new-dst-impl').value = '';
+            document.getElementById('new-dst-auth').value = 'broker';
+            document.getElementById('new-dst-required').value = '';
+            document.getElementById('new-dst-optional').value = '';
+            const activeCheck = document.getElementById('new-dst-active-check');
+            activeCheck.classList.add('checked');
+            activeCheck.querySelector('input').checked = true;
+            hideAlert('create-dstype-alert');
+            openModal('createDstypeModal');
+        }
+
+        async function createDstype() {
+            const canonical_name = document.getElementById('new-dst-canonical').value.trim();
+            const display_name = document.getElementById('new-dst-display').value.trim();
+            const protocol = document.getElementById('new-dst-protocol').value;
+            const dialect_token = document.getElementById('new-dst-dialect').value.trim();
+            const implementation_key = document.getElementById('new-dst-impl').value.trim();
+            const auth_style = document.getElementById('new-dst-auth').value;
+            const requiredRaw = document.getElementById('new-dst-required').value.trim();
+            const required = requiredRaw ? requiredRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+            const optionalRaw = document.getElementById('new-dst-optional').value.trim();
+            const optional = optionalRaw ? optionalRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+            const is_active = document.getElementById('new-dst-active-check').querySelector('input').checked;
+            const btn = document.getElementById('createDstypeBtn');
+            hideAlert('create-dstype-alert');
+            if (!canonical_name) { showAlert('create-dstype-alert', 'Canonical name is required.'); return; }
+            if (!display_name) { showAlert('create-dstype-alert', 'Display name is required.'); return; }
+            if (!dialect_token) { showAlert('create-dstype-alert', 'Dialect token is required.'); return; }
+            if (!implementation_key) { showAlert('create-dstype-alert', 'Implementation key is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/datasource-types`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        canonical_name, display_name, protocol, dialect_token,
+                        implementation_key, auth_style,
+                        capabilities: {},
+                        config_schema: { required, optional },
+                        is_active
+                    })
+                });
+                const d = await res.json();
+                if (res.ok) { closeModal('createDstypeModal'); await loadDstypes(); showDstAlert('success', `Driver "${display_name}" created.`); }
+                else showAlert('create-dstype-alert', d.detail || 'Failed to create driver.');
+            } catch (_) { showAlert('create-dstype-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openEditDstypeModal(id) {
+            const t = allDstypes.find(x => x.driver_id === id);
+            if (!t) return;
+            document.getElementById('edit-dst-id').value = id;
+            document.getElementById('edit-dst-canonical').value = t.canonical_name;
+            document.getElementById('edit-dst-display').value = t.display_name;
+            document.getElementById('edit-dst-protocol').value = t.protocol;
+            document.getElementById('edit-dst-dialect').value = t.dialect_token;
+            document.getElementById('edit-dst-impl').value = t.implementation_key;
+            document.getElementById('edit-dst-auth').value = t.auth_style;
+            const required = (t.config_schema && t.config_schema.required) ? t.config_schema.required.join(', ') : '';
+            document.getElementById('edit-dst-required').value = required;
+            const optional = (t.config_schema && t.config_schema.optional) ? t.config_schema.optional.join(', ') : '';
+            document.getElementById('edit-dst-optional').value = optional;
+            const activeCheck = document.getElementById('edit-dst-active-check');
+            activeCheck.classList.toggle('checked', t.is_active);
+            activeCheck.querySelector('input').checked = t.is_active;
+            hideAlert('edit-dstype-alert');
+            openModal('editDstypeModal');
+        }
+
+        async function saveDstypeEdit() {
+            const id = document.getElementById('edit-dst-id').value;
+            const t = allDstypes.find(x => x.driver_id === parseInt(id));
+            const display_name = document.getElementById('edit-dst-display').value.trim();
+            const protocol = document.getElementById('edit-dst-protocol').value;
+            const dialect_token = document.getElementById('edit-dst-dialect').value.trim();
+            const implementation_key = document.getElementById('edit-dst-impl').value.trim();
+            const auth_style = document.getElementById('edit-dst-auth').value;
+            const requiredRaw = document.getElementById('edit-dst-required').value.trim();
+            const required = requiredRaw ? requiredRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+            const optionalRaw = document.getElementById('edit-dst-optional').value.trim();
+            const optional = optionalRaw ? optionalRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+            const is_active = document.getElementById('edit-dst-active-check').querySelector('input').checked;
+            const btn = document.getElementById('editDstypeBtn');
+            hideAlert('edit-dstype-alert');
+            if (!display_name) { showAlert('edit-dstype-alert', 'Display name is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/datasource-types/${id}`, {
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        display_name, protocol, dialect_token, implementation_key, auth_style,
+                        runtime_owner: t ? t.runtime_owner : 'shared',
+                        capabilities: t ? t.capabilities : {},
+                        config_schema: { required, optional },
+                        is_active
+                    })
+                });
+                const d = await res.json();
+                if (res.ok) { closeModal('editDstypeModal'); await loadDstypes(); showDstAlert('success', 'Driver updated.'); }
+                else showAlert('edit-dstype-alert', d.detail || 'Failed to update.');
+            } catch (_) { showAlert('edit-dstype-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openDeleteDstypeModal(id, label) {
+            dstypeToDelete = id;
+            document.getElementById('delete-dst-label').textContent = label;
+            openModal('deleteDstypeModal');
+        }
+
+        async function confirmDeleteDstype() {
+            if (!dstypeToDelete) return;
+            const btn = document.getElementById('confirmDeleteDstypeBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/datasource-types/${dstypeToDelete}`, { method: 'DELETE', credentials: 'include' });
+                if (res.ok) { closeModal('deleteDstypeModal'); await loadDstypes(); showDstAlert('success', 'Driver deleted.'); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to delete.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; dstypeToDelete = null; }
+        }
+
+        async function openFieldsModal(driverId, label) {
+            document.getElementById('fields-dst-id').value = driverId;
+            document.getElementById('fields-modal-sub').textContent = `Aliases for: ${label}`;
+            document.getElementById('new-field-name').value = '';
+            document.getElementById('new-field-type').value = 'legacy';
+            hideAlert('fields-alert'); hideAlert('add-field-alert');
+            openModal('fieldsModal');
+            await loadFields(driverId);
+        }
+
+        async function loadFields(driverId) {
+            document.getElementById('fields-tbody').innerHTML = `<tr class="loading-row"><td colspan="4">Loading…</td></tr>`;
+            try {
+                const res = await fetch(`${API}/admin/datasource-types/${driverId}/aliases`, { credentials: 'include' });
+                const aliases = await res.json();
+                renderFieldsTable(aliases);
+            } catch (_) { showAlert('fields-alert', 'Failed to load aliases.'); }
+        }
+
+        function renderFieldsTable(aliases) {
+            const tbody = document.getElementById('fields-tbody');
+            if (!aliases.length) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--tx3);font-size:12px;">No aliases yet.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = aliases.map(a => `
+        <tr>
+            <td class="hi mono">${escHtml(a.alias_name)}</td>
+            <td><span class="badge badge-blue">${escHtml(a.alias_type)}</span></td>
+            <td><span class="badge ${a.is_active ? 'badge-green' : 'badge-red'}">${a.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td><button class="t-btn t-del" onclick="deleteField(${a.alias_id})">Delete</button></td>
+        </tr>`).join('');
+        }
+
+        async function addField() {
+            const driverId = document.getElementById('fields-dst-id').value;
+            const alias_name = document.getElementById('new-field-name').value.trim();
+            const alias_type = document.getElementById('new-field-type').value;
+            const btn = document.getElementById('addFieldBtn');
+            hideAlert('add-field-alert');
+            if (!alias_name) { showAlert('add-field-alert', 'Alias name is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/datasource-types/${driverId}/aliases`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ alias_name, alias_type, is_active: true })
+                });
+                const d = await res.json();
+                if (res.ok) {
+                    document.getElementById('new-field-name').value = '';
+                    await loadFields(driverId);
+                } else showAlert('add-field-alert', d.detail || 'Failed to add alias.');
+            } catch (_) { showAlert('add-field-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        async function deleteField(aliasId) {
+            if (!confirm('Delete this alias?')) return;
+            const driverId = document.getElementById('fields-dst-id').value;
+            try {
+                const res = await fetch(`${API}/admin/datasource-types/aliases/${aliasId}`, { method: 'DELETE', credentials: 'include' });
+                if (res.ok) { await loadFields(driverId); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to delete alias.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+        }
+
+        function showDstAlert(type, msg) {
+            const el = document.getElementById('dst-alert');
+            el.className = `alert alert-${type} show`;
+            el.textContent = msg;
+            setTimeout(() => el.classList.remove('show'), 4000);
+        }
+        init();
+
+        // ── Module Groups ─────────────────────────────────────────────────────────────
+        let allGroups = [], groupToDelete = null;
+
+        async function loadGroups() {
+            try {
+                if (!allModules.length) {
+                    const modRes = await fetch(`${API}/admin/modules`, { credentials: 'include' });
+                    const modData = await modRes.json();
+                    allModules = modData.modules || [];
+                }
+                const res = await fetch(`${API}/admin/module-groups`, { credentials: 'include' });
+                const d = await res.json();
+                allGroups = d.groups || [];
+                renderGroupsTable(allGroups);
+                document.getElementById('stat-groups-total').textContent = allGroups.length;
+                document.getElementById('stat-groups-active').textContent = allGroups.filter(g => g.status === 'active').length;
+            } catch (_) { showGroupAlert('error', 'Failed to load groups.'); }
+        }
+
+        function renderGroupsTable(groups) {
+            const tbody = document.getElementById('groups-tbody');
+            if (!groups.length) {
+                tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-ico">🗂️</div><div class="empty-title">No groups yet</div><div class="empty-sub">Create your first module group using the + Add Group button</div></div></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = groups.map(g => {
+                const groupModules = allModules.filter(m => m.group_id === g.id);
+                const moduleTags = groupModules.length ? groupModules.map(m => `<span class="tag">${m.name}</span>`).join('') : '<span style="color:var(--tx3);font-size:11px;">No modules</span>';
+                return `<tr>
+                    <td class="hi">${escHtml(g.name)}</td>
+                    <td>${escHtml(g.description || '—')}</td>
+                    <td class="mono">${g.display_order}</td>
+                    <td><span class="badge ${g.status === 'active' ? 'badge-green' : 'badge-amber'}">${g.status}</span></td>
+                    <td><div class="tag-list">${moduleTags}</div></td>
+                    <td><div class="t-actions">
+                        <button class="t-btn t-edit" onclick="openEditGroupModal('${g.id}')">Edit</button>
+                        <button class="t-btn t-del" onclick="openDeleteGroupModal('${g.id}', '${escHtml(g.name)}')">Delete</button>
+                    </div></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function openCreateGroupModal() {
+            document.getElementById('new-group-name').value = '';
+            document.getElementById('new-group-description').value = '';
+            document.getElementById('new-group-order').value = '0';
+            const ungrouped = allModules.filter(m => !m.group_id);
+            document.getElementById('create-group-modules-grid').innerHTML = ungrouped.length
+                ? ungrouped.map(m => `<div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="${m.id}" />
+                    <div class="check-box">✓</div>
+                    <span class="check-lbl">${escHtml(m.name)}</span>
+                </div>`).join('')
+                : '<span style="color:var(--tx3);font-size:12px;">No ungrouped modules available.</span>';
+            hideAlert('create-group-alert');
+            openModal('createGroupModal');
+        }
+
+        async function createGroup() {
+            const name = document.getElementById('new-group-name').value.trim();
+            const description = document.getElementById('new-group-description').value.trim();
+            const display_order = parseInt(document.getElementById('new-group-order').value) || 0;
+            const btn = document.getElementById('createGroupBtn');
+            hideAlert('create-group-alert');
+            if (!name) { showAlert('create-group-alert', 'Group name is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/module-groups`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ name, description: description || null, display_order })
+                });
+                const d = await res.json();
+                if (res.ok) {
+                    const checkedIds = [...document.querySelectorAll('#create-group-modules-grid input:checked')].map(i => i.value);
+                    await Promise.all(checkedIds.map(mid => fetch(`${API}/admin/modules/${mid}`, {
+                        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ group_id: d.id })
+                    })));
+                    closeModal('createGroupModal'); await loadGroups(); showGroupAlert('success', `Group "${name}" created.`);
+                }
+                else showAlert('create-group-alert', d.detail || 'Failed to create group.');
+            } catch (_) { showAlert('create-group-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        async function openEditGroupModal(id) {
+            const group = allGroups.find(g => g.id === id);
+            if (!group) return;
+            document.getElementById('editGroupId').value = id;
+            document.getElementById('edit-group-name').value = group.name;
+            document.getElementById('edit-group-description').value = group.description || '';
+            document.getElementById('edit-group-order').value = group.display_order;
+            document.getElementById('edit-group-status').value = group.status;
+            // Show modules: current group's modules checked, ungrouped modules unchecked, other groups' modules hidden
+            const eligible = allModules.filter(m => !m.group_id || m.group_id === id);
+            document.getElementById('edit-group-modules-grid').innerHTML = eligible.map(m => {
+                const checked = m.group_id === id;
+                return `<div class="check-item ${checked ? 'checked' : ''}" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="${m.id}" ${checked ? 'checked' : ''} />
+                    <div class="check-box">✓</div>
+                    <span class="check-lbl">${escHtml(m.name)}</span>
+                </div>`;
+            }).join('');
+            hideAlert('edit-group-alert');
+            openModal('editGroupModal');
+        }
+
+        async function saveGroupEdit() {
+            const id = document.getElementById('editGroupId').value;
+            const name = document.getElementById('edit-group-name').value.trim();
+            const description = document.getElementById('edit-group-description').value.trim();
+            const display_order = parseInt(document.getElementById('edit-group-order').value) || 0;
+            const status = document.getElementById('edit-group-status').value;
+            const checkedModuleIds = [...document.querySelectorAll('#edit-group-modules-grid input:checked')].map(i => i.value);
+            const btn = document.getElementById('editGroupBtn');
+            hideAlert('edit-group-alert');
+            if (!name) { showAlert('edit-group-alert', 'Group name is required.'); return; }
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                // Update group metadata
+                const res = await fetch(`${API}/admin/module-groups/${id}`, {
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ name, description: description || null, display_order, status })
+                });
+                if (!res.ok) { const d = await res.json(); showAlert('edit-group-alert', d.detail || 'Failed to update group.'); return; }
+
+                // Update module assignments — set group_id for checked, clear for unchecked eligible modules
+                const eligible = allModules.filter(m => !m.group_id || m.group_id === id);
+                await Promise.all(eligible.map(m => {
+                    const shouldBeInGroup = checkedModuleIds.includes(m.id);
+                    const alreadyInGroup = m.group_id === id;
+                    if (shouldBeInGroup === alreadyInGroup) return Promise.resolve();
+                    return fetch(`${API}/admin/modules/${m.id}`, {
+                        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ group_id: shouldBeInGroup ? id : null })
+                    });
+                }));
+
+                closeModal('editGroupModal');
+                await Promise.all([loadGroups(), loadModules()]);
+                showGroupAlert('success', 'Group updated.');
+            } catch (_) { showAlert('edit-group-alert', 'Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        }
+
+        function openDeleteGroupModal(id, name) {
+            groupToDelete = id;
+            document.getElementById('deleteGroupName').textContent = name;
+            openModal('deleteGroupModal');
+        }
+
+        async function confirmDeleteGroup() {
+            if (!groupToDelete) return;
+            const btn = document.getElementById('confirmDeleteGroupBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch(`${API}/admin/module-groups/${groupToDelete}`, { method: 'DELETE', credentials: 'include' });
+                if (res.ok) { closeModal('deleteGroupModal'); await Promise.all([loadGroups(), loadModules()]); showGroupAlert('success', 'Group deleted.'); }
+                else { const d = await res.json(); alert(d.detail || 'Failed to delete group.'); }
+            } catch (_) { alert('Could not reach the server.'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; groupToDelete = null; }
+        }
+
+        function showGroupAlert(type, msg) {
+            const el = document.getElementById('groups-alert');
+            el.className = `alert alert-${type} show`;
+            el.textContent = msg;
+            setTimeout(() => el.classList.remove('show'), 4000);
+        }
+    </script>
+</body>
+
+</html>

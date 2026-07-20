@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: docai_user
+      POSTGRES_PASSWORD: docai_pass
+      POSTGRES_DB: docai_db
+    ports:
+      - "5432:5432"
+    networks:
+      - docai_net
+
+  weaviate:
+    image: weaviate/weaviate:latest
+    ports:
+      - "8080:8080"
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+    networks:
+      - docai_net
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - docai_net
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    networks:
+      - docai_net
+
+networks:
+  docai_net:

@@ -1,0 +1,1 @@
+Insurance claim for patient John Doe with SSN 123-45-6789 and policy number POL-9001 after vehicle damage.

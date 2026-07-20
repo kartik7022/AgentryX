@@ -1,0 +1,161 @@
+<mvc:View
+    controllerName="sapqueryapp.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:l="sap.ui.layout"
+    displayBlock="true">
+
+    <Page
+        title="SAP HANA Query App"
+        showHeader="true"
+        backgroundDesign="List">
+
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Title text="🔷 SAP HANA Query App" />
+                </contentLeft>
+                <contentRight>
+                    <Button
+                        text="Logout"
+                        icon="sap-icon://log"
+                        press=".onLogout"
+                        type="Reject" />
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- User Info Bar -->
+                <MessageStrip
+                    text="{app>/welcomeMsg}"
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiSmallMarginBottom" />
+
+                <!-- Role Badge -->
+                <HBox class="sapUiSmallMarginBottom" alignItems="Center">
+                    <Label text="Your Role: " class="sapUiSmallMarginEnd" />
+                    <ObjectStatus
+                        text="{app>/role}"
+                        state="Success"
+                        icon="sap-icon://employee" />
+                </HBox>
+
+                <!-- Query Input Box -->
+                <Panel
+                    headerText="💬 Ask SAP HANA"
+                    expandable="false"
+                    class="sapUiSmallMarginBottom">
+                    <content>
+                        <VBox class="sapUiSmallMargin">
+                            <Label text="Enter your question:" class="sapUiSmallMarginBottom" />
+                            <SearchField
+                                id="queryInput"
+                                placeholder="e.g. Show me all finance employees"
+                                value="{app>/query}"
+                                search=".onAskQuestion"
+                                width="100%" />
+                            <HBox class="sapUiSmallMarginTop">
+                                <Button
+                                    text="Ask Question"
+                                    icon="sap-icon://search"
+                                    press=".onAskQuestion"
+                                    type="Emphasized"
+                                    class="sapUiSmallMarginEnd" />
+                                <Button
+                                    text="Clear"
+                                    icon="sap-icon://clear-all"
+                                    press=".onClear"
+                                    type="Default" />
+                            </HBox>
+
+                            <!-- Loading -->
+                            <BusyIndicator
+                                visible="{app>/isLoading}"
+                                size="1rem"
+                                class="sapUiSmallMarginTop" />
+
+                            <!-- Error -->
+                            <MessageStrip
+                                text="{app>/errorMsg}"
+                                type="Error"
+                                visible="{= !!${app>/errorMsg}}"
+                                showIcon="true"
+                                class="sapUiSmallMarginTop" />
+
+                            <!-- Description -->
+                            <MessageStrip
+                                text="{app>/description}"
+                                type="Success"
+                                visible="{= !!${app>/description}}"
+                                showIcon="true"
+                                class="sapUiSmallMarginTop" />
+                        </VBox>
+                    </content>
+                </Panel>
+
+                <!-- Results Table -->
+                <Panel
+                    headerText="{= 'Results (' + ${app>/resultCount} + ') — ' + ${app>/role} + ' View'}"
+                    visible="{app>/hasResults}"
+                    expandable="false">
+                    <content>
+                        <Table
+                            id="resultsTable"
+                            items="{app>/results}"
+                            growing="true"
+                            growingThreshold="10"
+                            alternateRowColors="true"
+                            sticky="ColumnHeaders">
+
+                            <columns>
+                                <Column><Text text="ID" /></Column>
+                                <Column><Text text="Name" /></Column>
+                                <Column><Text text="Department" /></Column>
+                                <Column><Text text="Salary" /></Column>
+                                <Column><Text text="Location" /></Column>
+                            </columns>
+
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{app>ID}" />
+                                        <Text text="{app>NAME}" />
+                                        <ObjectStatus text="{app>DEPARTMENT}" state="Information" />
+                                        <Text text="{app>SALARY}" />
+                                        <Text text="{app>LOCATION}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </content>
+                </Panel>
+
+                <!-- No Results -->
+                <VBox
+                    visible="{= !${app>/hasResults} &amp;&amp; !${app>/isLoading}}"
+                    alignItems="Center"
+                    class="sapUiLargeMarginTop">
+                    <core:Icon
+                        xmlns:core="sap.ui.core"
+                        src="sap-icon://search"
+                        size="3rem"
+                        color="var(--sapNeutralColor)" />
+                    <Title
+                        text="Enter a question to query SAP HANA"
+                        level="H4"
+                        class="sapUiSmallMarginTop" />
+                    <Text
+                        text="Example: Show me all finance employees"
+                        class="sapUiSmallMarginTop" />
+                </VBox>
+
+            </VBox>
+        </content>
+
+    </Page>
+</mvc:View>

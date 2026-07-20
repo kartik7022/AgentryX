@@ -1,0 +1,12 @@
+{
+  "name": "sapqueryapp",
+  "version": "1.0.0",
+  "description": "SAP Fiori App for HANA Queries",
+  "scripts": {
+    "start": "fiori run",
+    "build": "fiori build"
+  },
+  "devDependencies": {
+    "@sap/ux-ui5-tooling": "^1.0.0"
+  }
+}

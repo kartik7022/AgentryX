@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+*.json.bak
+debug-merged-catalog.xml
+payments.json
+billing-config.json

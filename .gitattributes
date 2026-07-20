@@ -1,0 +1,13 @@
+* text=auto
+
+# Shell/config files mounted into Linux containers must stay LF on Windows clones.
+*.sh text eol=lf
+*.bash text eol=lf
+Dockerfile text eol=lf
+*.conf text eol=lf
+*.hcl text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# PowerShell scripts are primarily used from Windows.
+*.ps1 text eol=crlf

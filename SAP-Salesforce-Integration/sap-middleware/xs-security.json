@@ -1,0 +1,38 @@
+{
+  "xsappname": "sapqueryapp",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    { "name": "$XSAPPNAME.Finance", "description": "Finance data access" },
+    { "name": "$XSAPPNAME.HR",      "description": "HR data access" },
+    { "name": "$XSAPPNAME.Admin",   "description": "Admin access" }
+  ],
+  "role-templates": [
+    { "name": "FinanceRole", "description": "Finance users", "scope-references": ["$XSAPPNAME.Finance"] },
+    { "name": "HRRole",      "description": "HR users",      "scope-references": ["$XSAPPNAME.HR"] },
+    { "name": "AdminRole",   "description": "Admin users",   "scope-references": ["$XSAPPNAME.Admin"] }
+  ],
+  "role-collections": [
+    { "name": "Finance_Users", "role-template-references": ["$XSAPPNAME.FinanceRole"] },
+    { "name": "HR_Users",      "role-template-references": ["$XSAPPNAME.HRRole"] },
+    { "name": "Admin_Users",   "role-template-references": ["$XSAPPNAME.AdminRole"] }
+  ],
+  "oauth2-configuration": {
+    "token-validity": 43200,
+    "autoapprove": true,
+    "redirect-uris": [
+      "https://login.salesforce.com/services/authcallback/*",
+      "https://*.salesforce.com/services/authcallback/*",
+      "https://*.lightning.force.com/services/authcallback/*",
+      "https://*.salesforce.com/_nc_external/*",
+      "https://*.my.salesforce.com/_nc_external/*"
+    ],
+    "grant-types": [
+      "authorization_code",
+      "client_credentials",
+      "refresh_token",
+      "password",
+      "urn:ietf:params:oauth:grant-type:jwt-bearer"
+    ],
+    "allowedproviders": ["sap.default"]
+  }
+}

@@ -1,0 +1,83 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+.npm/
+.vite/
+*.tsbuildinfo
+
+# Logs and local state
+*.log
+*.pid
+*.seed
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.tmp
+
+# Runtime artifacts
+KillBill/account-id.txt
+KillBill/demo-account-id.txt
+KillBill/manager-demo-account.txt
+KillBill/subscription-ids.json
+KillBill/demo-subscription-ids.json
+KillBill/app-db.json
+KillBill/gateway/billing-config.json
+KillBill/gateway/payments.json
+KillBill/gateway/usage-data.json
+KillBill/gateway/plans.json
+KillBill/gateway/debug-merged-catalog.xml
+KillBill/gateway/trial-usage.db
+
+# Local repo/tooling artifacts
+.agents/
+.codex/
+.codex-audit/
+**/.git.backup/
+orchestration/archestration.txt
+
+# Old local generator scratch files
+KillBill/gateway/write-gateway*.js
+KillBill/gateway/cutoff)
+KillBill/gateway/console.log('Socket.IO
+KillBill/gateway/([{]
+KillBill/gateway/'
+KillBill/gateway/e.accountId
+KillBill/gateway/node
+KillBill/gateway/[{]
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Docker local overrides
+docker-compose.override.yml
+**/docker-compose.override.yml

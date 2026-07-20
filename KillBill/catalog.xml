@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="CatalogSchema.xsd">
+  <effectiveDate>2026-06-24T00:00:00+00:00</effectiveDate>
+  <catalogName>MyPOCCatalog</catalogName>
+  <recurringBillingMode>IN_ADVANCE</recurringBillingMode>
+  <currencies>
+    <currency>INR</currency>
+  </currencies>
+  <units>
+    <unit name="calls"/>
+    <unit name="emails"/>
+  </units>
+  <products>
+    <product name="email_validate"><category>BASE</category></product>
+    <product name="data"><category>BASE</category></product>
+    <product name="sql_query"><category>BASE</category></product>
+  </products>
+  <rules>
+    <changePolicy><changePolicyCase><policy>IMMEDIATE</policy></changePolicyCase></changePolicy>
+    <cancelPolicy><cancelPolicyCase><policy>IMMEDIATE</policy></cancelPolicyCase></cancelPolicy>
+  </rules>
+  <plans>
+    <plan name="email-validate-basic">
+      <product>email_validate</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>14</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>0</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="email-validate-standard">
+      <product>email_validate</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>10</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>300</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="email-validate-pro">
+      <product>email_validate</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>7</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>500</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="data-basic">
+      <product>data</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>14</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>0</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="data-standard">
+      <product>data</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>10</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>300</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="data-pro">
+      <product>data</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>7</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>500</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="sql-query-basic">
+      <product>sql_query</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>14</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>0</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="sql-query-standard">
+      <product>sql_query</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>10</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>300</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+    <plan name="sql-query-pro">
+      <product>sql_query</product>
+      <initialPhases>
+        <phase type="TRIAL">
+          <duration><unit>DAYS</unit><number>7</number></duration>
+          <fixed><fixedPrice><price><currency>INR</currency><value>0</value></price></fixedPrice></fixed>
+        </phase>
+      </initialPhases>
+      <finalPhase type="EVERGREEN">
+        <duration><unit>UNLIMITED</unit></duration>
+        <recurring><billingPeriod>MONTHLY</billingPeriod><recurringPrice><price><currency>INR</currency><value>500</value></price></recurringPrice></recurring>
+      </finalPhase>
+    </plan>
+  </plans>
+  <priceLists>
+    <defaultPriceList name="DEFAULT">
+      <plans>
+        <plan>email-validate-basic</plan>
+        <plan>email-validate-standard</plan>
+        <plan>email-validate-pro</plan>
+        <plan>data-basic</plan>
+        <plan>data-standard</plan>
+        <plan>data-pro</plan>
+        <plan>sql-query-basic</plan>
+        <plan>sql-query-standard</plan>
+        <plan>sql-query-pro</plan>
+      </plans>
+    </defaultPriceList>
+  </priceLists>
+</catalog>

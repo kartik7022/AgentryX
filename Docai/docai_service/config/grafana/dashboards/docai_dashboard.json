@@ -1,0 +1,86 @@
+{
+  "uid": "docai-dashboard",
+  "title": "DocAI Monitoring",
+  "tags": ["docai", "monitoring"],
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Total requests per endpoint",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "sum by (endpoint) (rate(docai_requests_total[5m]))",
+          "legendFormat": "{{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "P95 request latency by endpoint",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, endpoint) (rate(docai_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Parse success rate by doc type",
+      "gridPos": {"x": 0, "y": 8, "w": 8, "h": 6},
+      "targets": [
+        {
+          "expr": "sum(rate(docai_parse_total{status=\"success\"}[5m])) / sum(rate(docai_parse_total[5m]))",
+          "legendFormat": "success rate"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "histogram",
+      "title": "Confidence score distribution",
+      "gridPos": {"x": 8, "y": 8, "w": 8, "h": 6},
+      "targets": [
+        {
+          "expr": "docai_confidence_score_bucket",
+          "legendFormat": "{{doc_type_name}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "barchart",
+      "title": "PII redactions by entity type",
+      "gridPos": {"x": 16, "y": 8, "w": 8, "h": 6},
+      "targets": [
+        {
+          "expr": "sum by (entity_type) (rate(docai_pii_redactions_total[5m]))",
+          "legendFormat": "{{entity_type}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Registered doc types count",
+      "gridPos": {"x": 0, "y": 14, "w": 6, "h": 4},
+      "targets": [
+        {
+          "expr": "docai_registered_doc_types_total",
+          "legendFormat": "count"
+        }
+      ]
+    }
+  ]
+}

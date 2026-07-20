@@ -1,0 +1,1 @@
+Medical record for patient John Doe. DOB: 1990-01-01. Medical license: MED-7781. Diagnosis: follow-up triage required.

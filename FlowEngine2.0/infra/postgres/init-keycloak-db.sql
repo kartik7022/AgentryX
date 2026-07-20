@@ -1,0 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS keycloak;
+CREATE USER keycloak_user WITH PASSWORD 'keycloak_password';
+GRANT ALL ON SCHEMA keycloak TO keycloak_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA keycloak TO keycloak_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA keycloak GRANT ALL ON TABLES TO keycloak_user;

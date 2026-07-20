@@ -1,0 +1,309 @@
+services:
+  app:
+    build: .
+    container_name: flowengine-app-2
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    environment:
+      KILLBILL_GATEWAY_URL: http://killbill-gateway:3002
+    depends_on:
+      db:
+        condition: service_healthy
+      vault:
+        condition: service_started
+      keycloak-google-bootstrap:
+        condition: service_completed_successfully
+      killbill-gateway:
+        condition: service_started
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    container_name: flowengine-postgres-2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: AgentryX
+    ports:
+      - "5433:5432"
+    volumes:
+      - flowengine-pgdata-2:/var/lib/postgresql/data
+      - ./infra/postgres/init-keycloak-db.sql:/docker-entrypoint-initdb.d/init-keycloak-db.sql
+    networks:
+      - flowengine-net-2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  vault:
+    image: hashicorp/vault:1.14.0
+    container_name: flowengine-vault-2
+    cap_add:
+      - IPC_LOCK
+    entrypoint: ["vault"]
+    command: ["server", "-config=/vault/config/vault.hcl"]
+    volumes:
+      - ./infra/vault/vault.hcl:/vault/config/vault.hcl:ro
+      - ./infra/vault/adapter-tenant-jwt-policy.hcl:/vault/config/adapter-tenant-jwt-policy.hcl:ro
+      - vault-data-2:/vault/file
+    ports:
+      - "8201:8200"
+    environment:
+      VAULT_ADDR: "http://127.0.0.1:8200"
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+  killbill-db:
+    image: killbill/mariadb:0.24
+    container_name: killbill-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: killbill
+    ports:
+      - "3306:3306"
+    volumes:
+      - killbill-db-data:/var/lib/mysql
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+  killbill:
+    image: killbill-fixed
+    container_name: killbill-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      killbill-db:
+        condition: service_started
+    environment:
+      KILLBILL_DAO_URL: jdbc:mysql://killbill-db:3306/killbill
+      KILLBILL_DAO_USER: root
+      KILLBILL_DAO_PASSWORD: killbill
+      JAVA_OPTS: -Dcom.sun.jndi.rmiURLParsing=legacy
+      KB_org_killbill_server_test_mode: "true"
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+  killbill-catalog-bootstrap:
+    image: curlimages/curl:8.10.1
+    container_name: killbill-catalog-bootstrap
+    depends_on:
+      killbill:
+        condition: service_started
+    environment:
+      KB_URL: http://killbill:8080
+      KB_ADMIN_USER: admin
+      KB_ADMIN_PASSWORD: password
+      KB_API_KEY: company_a
+      KB_API_SECRET: company_a_secret
+      KB_CATALOG_FILE: /catalog.xml
+    entrypoint: ["/bin/sh", "/bootstrap-catalog.sh"]
+    volumes:
+      - ./infra/killbill/bootstrap-catalog.sh:/bootstrap-catalog.sh:ro
+      - ../KillBill/catalog.xml:/catalog.xml:ro
+    networks:
+      - flowengine-net-2
+    restart: "no"
+
+  # kaui:
+  #   image: killbill/kaui:3.0.10
+  #   container_name: killbill-kaui
+  #   ports:
+  #     - "9090:8080"
+  #   depends_on:
+  #     - killbill
+  #     - killbill-db
+  #   environment:
+  #     - KAUI_CONFIG_DAO_URL=jdbc:mysql://killbill-db:3306/kaui
+  #     - KAUI_CONFIG_DAO_USER=root
+  #     - KAUI_CONFIG_DAO_PASSWORD=killbill
+  #     - KAUI_KILLBILL_URL=http://killbill:8080
+  #     - KAUI_KILLBILL_API_KEY=admin
+  #     - KAUI_KILLBILL_API_SECRET=password
+  #     - KAUI_CONFIG_KAUI_URL=http://localhost:9090
+  #   networks:
+  #     - flowengine-net-2
+  #   restart: unless-stopped
+
+  # metabase:
+  #   image: metabase/metabase:latest
+  #   container_name: killbill-metabase
+  #   ports:
+  #     - "3003:3000"
+  #   depends_on:
+  #     - killbill-db
+  #   environment:
+  #     - MB_DB_TYPE=h2
+  #     - JAVA_TIMEZONE=Asia/Kolkata
+  #   volumes:
+  #     - metabase-data:/metabase-data
+  #   networks:
+  #     - flowengine-net-2
+  #   restart: unless-stopped
+
+  # mautic-db:
+  #   image: mysql:8.0
+  #   container_name: mautic-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: mautic
+  #     MYSQL_DATABASE: mautic
+  #     MYSQL_USER: mautic
+  #     MYSQL_PASSWORD: mautic
+  #   volumes:
+  #     - mautic-db-data:/var/lib/mysql
+  #   networks:
+  #     - flowengine-net-2
+  #   restart: unless-stopped
+
+  # mautic:
+  #   image: mautic/mautic:5-apache
+  #   container_name: mautic
+  #   ports:
+  #     - "3004:80"
+  #   depends_on:
+  #     - mautic-db
+  #   environment:
+  #     - MAUTIC_DB_HOST=mautic-db
+  #     - MAUTIC_DB_PORT=3306
+  #     - MAUTIC_DB_NAME=mautic
+  #     - MAUTIC_DB_USER=mautic
+  #     - MAUTIC_DB_PASSWORD=mautic
+  #     - MAUTIC_ADMIN_USERNAME=admin
+  #     - MAUTIC_ADMIN_PASSWORD=Admin@1234
+  #     - MAUTIC_ADMIN_EMAIL=admin@example.com
+  #     - PHP_MEMORY_LIMIT=512M
+  #   volumes:
+  #     - mautic-data:/var/www/html
+  #   networks:
+  #     - flowengine-net-2
+  #   restart: unless-stopped
+
+  killbill-gateway:
+    build:
+      context: ../KillBill/gateway
+      dockerfile: Dockerfile
+    container_name: killbill-gateway
+    ports:
+      - "3002:3002"
+      - "3005:3005"
+    depends_on:
+      killbill:
+        condition: service_started
+      killbill-catalog-bootstrap:
+        condition: service_completed_successfully
+    env_file:
+      - ../KillBill/gateway/.env
+    environment:
+      KB_HOST: killbill
+      KB_BASE: http://killbill:8080
+      KB_WEBHOOK_CALLBACK_URL: http://killbill-gateway:3005/api/webhooks/killbill
+      FLOWENGINE_URL: http://app:8000
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.4
+    container_name: flowengine-keycloak
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/AgentryX?currentSchema=keycloak
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak_user
+      KC_DB_PASSWORD: keycloak_password
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "7000:8080"
+    command: start-dev --import-realm
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+      - ./infra/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./infra/keycloak/themes:/opt/keycloak/themes:ro
+    networks:
+      - flowengine-net-2
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 5 bash -ec '</dev/tcp/127.0.0.1/8080'"]
+      interval: 10s
+      timeout: 6s
+      retries: 90
+      start_period: 60s
+    restart: unless-stopped
+
+  keycloak-google-bootstrap:
+    image: python:3.11-slim
+    container_name: keycloak-google-bootstrap
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      KEYCLOAK_BOOTSTRAP_URL: http://keycloak:8080
+      KEYCLOAK_BOOTSTRAP_ADMIN_USERNAME: admin
+      KEYCLOAK_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KEYCLOAK_BOOTSTRAP_READY_ATTEMPTS: 420
+      KEYCLOAK_BOOTSTRAP_READY_DELAY_SECONDS: 2
+      KEYCLOAK_BOOTSTRAP_REQUEST_TIMEOUT_SECONDS: 5
+      GOOGLE_IDP_ALIAS: google
+    command: ["python", "/bootstrap-google-idp.py"]
+    volumes:
+      - ./infra/keycloak/bootstrap-google-idp.py:/bootstrap-google-idp.py:ro
+    networks:
+      - flowengine-net-2
+    restart: "no"
+
+  tenant-ui:
+    build:
+      context: ./frontend/tenant
+      dockerfile: Dockerfile
+    container_name: tenant-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+  admin-ui:
+    build:
+      context: ./frontend/admin
+      dockerfile: Dockerfile.admin
+    container_name: admin-ui
+    ports:
+      - "5000:80"
+    depends_on:
+      - app
+    networks:
+      - flowengine-net-2
+    restart: unless-stopped
+
+networks:
+  flowengine-net-2:
+    driver: bridge
+
+volumes:
+  flowengine-pgdata-2:
+  vault-data-2:
+  keycloak-data:
+  killbill-db-data:
+    name: killbill_killbill_db_data
+  metabase-data:
+    name: killbill-poc_metabase_data
+  mautic-db-data:
+    name: killbill-poc_mautic_db_data
+  mautic-data:
+    name: killbill-poc_mautic_data

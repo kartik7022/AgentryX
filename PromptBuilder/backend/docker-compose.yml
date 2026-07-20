@@ -1,0 +1,97 @@
+version: "3.8"
+
+services:
+
+  # ── Frontend ──────────────────────────────────────────────────
+  frontend:
+    container_name: frontend
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+    networks:
+      - pbnet
+    restart: on-failure
+
+  # ── Backend ───────────────────────────────────────────────────
+  backend:
+    container_name: backend
+    build: .
+    ports:
+      - "10002:8080"
+    environment:
+      DATABASE_URL: ${DB_URL}
+      KASETTI_DS_URL: ${KASETTI_DS_URL}
+      API_HOST: 0.0.0.0
+      API_PORT: ${API_PORT}
+      COHERE_API_KEY: ${COHERE_API_KEY}
+      GOOGLE_TRANSLATE_KEY: ${GOOGLE_TRANSLATE_KEY}
+      LLM_ENDPOINT: ${LLM_ENDPOINT:-}
+      LLM_WEBHOOK_URL: ${LLM_WEBHOOK_URL:-}
+      TEMPLATE_BUILDER_URL: ${TEMPLATE_BUILDER_URL:-http://host.docker.internal:10001/v1}
+    depends_on:
+      db:
+        condition: service_healthy
+      kasetti-db:
+        condition: service_healthy
+    networks:
+      - pbnet
+      - internet
+    restart: on-failure
+
+  # ── Prompt Builder DB ─────────────────────────────────────────
+  db:
+    container_name: database
+    image: postgres:15
+    environment:
+      POSTGRES_DB: prompt_builder
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - pbnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d prompt_builder"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: on-failure
+
+  # ── Kasetti Bank Datasource DB ────────────────────────────────
+  kasetti-db:
+    container_name: kasetti-datasource-postgres-pb
+    image: postgres:15
+    environment:
+      POSTGRES_USER: eivsdemo
+      POSTGRES_PASSWORD: eivsdemo
+      POSTGRES_DB: kasetti_bank
+    ports:
+      - "5434:5432"
+    volumes:
+      - kasetti-ds-pgdata:/var/lib/postgresql/data
+      - ./kasetti-db:/docker-entrypoint-initdb.d:ro
+    networks:
+      - pbnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eivsdemo -d kasetti_bank"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    restart: on-failure
+
+networks:
+  pbnet:
+    driver: bridge
+  internet:
+    driver: bridge
+
+volumes:
+  db_data:
+  kasetti-ds-pgdata:

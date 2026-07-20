@@ -1,0 +1,14 @@
+applications:
+  - name: sap-middleware
+    memory: 128M
+    buildpack: nodejs_buildpack
+    command: node server.js
+    services:
+      - sapqueryapp-xsuaa
+    env:
+      TABLE_NAME: EMPLOYEES
+      DEFAULT_ROLE: Admin
+      DEPT_FINANCE: Finance
+      DEPT_HR: HR
+      DEPT_SALES: Sales
+      DEPT_IT: IT

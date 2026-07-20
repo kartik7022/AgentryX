@@ -1,0 +1,231 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+:root {
+  color-scheme: light;
+
+  --color-bg-canvas: #f8fafc;
+  --color-bg-surface: #ffffff;
+  --color-bg-muted: #f1f5f9;
+  --color-bg-subtle: #eef2f7;
+  --color-bg-elevated: #fcfdfe;
+
+  --color-text-strong: #0f172a;
+  --color-text-base: #334155;
+  --color-text-muted: #64748b;
+  --color-text-soft: #94a3b8;
+  --color-text-inverse: #ffffff;
+  --color-text-brand: #1e293b;
+
+  --color-border-soft: #e2e8f0;
+  --color-border-base: #cbd5e1;
+  --color-border-strong: #94a3b8;
+
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-600: #bfdbfe;
+  --color-primary-700: #60a5fa;
+  --color-primary-800: #3b82f6;
+
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-500: #14b8a6;
+  --color-accent-700: #0f766e;
+
+  --color-success-bg: #f0fdf4;
+  --color-success-text: #166534;
+  --color-success-border: #bbf7d0;
+  --color-warning-bg: #fffbeb;
+  --color-warning-text: #92400e;
+  --color-warning-border: #fde68a;
+  --color-error-bg: #fef2f2;
+  --color-error-text: #991b1b;
+  --color-error-border: #fecaca;
+  --color-info-bg: #eff6ff;
+  --color-info-text: #3b82f6;
+  --color-info-border: #bfdbfe;
+  --color-overlay-scrim: rgba(15, 23, 42, 0.24);
+
+  --font-family-sans: "DM Sans", sans-serif;
+  --font-family-mono: "IBM Plex Mono", monospace;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 40px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.3;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.7;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.12);
+
+  --bg-page: var(--color-bg-canvas);
+  --bg-surface: var(--color-bg-surface);
+  --bg-elevated: var(--color-bg-elevated);
+  --text-strong: var(--color-text-strong);
+  --text-body: var(--color-text-base);
+  --text-muted: var(--color-text-muted);
+  --line-soft: var(--color-border-soft);
+  --line-strong: var(--color-border-base);
+  --brand-primary: var(--color-primary-700);
+  --brand-secondary: var(--color-primary-800);
+  --accent-teal: var(--color-accent-500);
+  --danger: var(--color-error-text);
+  --shadow-soft: var(--shadow-md);
+  --shadow-strong: var(--shadow-lg);
+  --radius-xl: var(--radius-lg);
+
+  /* TemplateBuilder legacy aliases mapped into the AgentryX light system. */
+  --navy-950: var(--color-text-strong);
+  --navy-900: var(--color-text-strong);
+  --navy-800: var(--color-text-base);
+  --navy-700: var(--color-text-base);
+  --navy-600: var(--color-text-muted);
+  --navy-200: var(--color-border-base);
+  --navy-100: var(--color-border-soft);
+  --navy-50: var(--color-bg-muted);
+  --accent: var(--color-primary-800);
+  --accent-light: var(--color-primary-200);
+  --accent-dark: var(--color-primary-800);
+  --accent-glow: rgba(191, 219, 254, 0.35);
+  --accent-subtle: var(--color-primary-50);
+  --success: var(--color-success-text);
+  --success-bg: var(--color-success-bg);
+  --warning: var(--color-warning-text);
+  --warning-bg: var(--color-warning-bg);
+  --danger-bg: var(--color-error-bg);
+  --surface: var(--color-bg-surface);
+  --surface-2: var(--color-bg-canvas);
+  --border: var(--color-border-soft);
+  --border-strong: var(--color-border-base);
+  --text-primary: var(--color-text-strong);
+  --text-secondary: var(--color-text-base);
+  --text-faint: var(--color-text-soft);
+  --shadow-xs: var(--shadow-sm);
+  --shadow-accent: 0 6px 18px rgba(96, 165, 250, 0.24);
+  --shadow-accent-lg: 0 10px 28px rgba(96, 165, 250, 0.28);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--color-bg-canvas);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text-strong);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--color-bg-canvas);
+}
+
+a {
+  color: var(--color-primary-800);
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--color-primary-100);
+  color: var(--color-text-strong);
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  color: var(--color-text-strong);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-soft);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary-200) !important;
+  box-shadow: 0 0 0 3px rgba(191, 219, 254, 0.35);
+}
+
+.surface-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}

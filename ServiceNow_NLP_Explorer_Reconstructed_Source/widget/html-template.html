@@ -1,0 +1,91 @@
+<div class="nlp-explorer">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">NLP Data Explorer</h3>
+    </div>
+
+    <div class="panel-body">
+      <div class="form-group">
+        <label>Data Source</label>
+        <select class="form-control"
+                ng-model="c.data.dataSource"
+                ng-options="option.value as option.label for option in c.data.dataSourceOptions">
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Enter your prompt</label>
+        <textarea class="form-control"
+                  rows="4"
+                  ng-model="c.data.prompt"
+                  placeholder="Example: Show all active incidents created this month">
+        </textarea>
+      </div>
+
+      <div class="text-right">
+        <button class="btn btn-primary"
+                ng-click="c.runQuery()"
+                ng-disabled="c.loading">
+          <span ng-if="!c.loading">Run Query</span>
+          <span ng-if="c.loading">Running...</span>
+        </button>
+      </div>
+
+      <div class="alert alert-danger" ng-if="c.error">
+        {{ c.error }}
+      </div>
+
+      <div class="generated-query" ng-if="c.data.generatedQuery">
+        <h4>Generated Query</h4>
+        <pre>{{ c.data.generatedQuery }}</pre>
+      </div>
+
+      <div class="result-section" ng-if="c.data.records.length">
+        <h4>Results</h4>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th ng-repeat="column in c.data.columns">
+                  {{ column }}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr ng-repeat="record in c.data.records">
+                <td ng-repeat="column in c.data.columns">
+                  {{ record[column] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-row">
+          <button class="btn btn-default"
+                  ng-click="c.previousPage()"
+                  ng-disabled="c.loading || c.data.currentPage <= 1">
+            Previous
+          </button>
+
+          <span>
+            Page {{ c.data.currentPage }} of {{ c.data.totalPages || 1 }}
+          </span>
+
+          <button class="btn btn-default"
+                  ng-click="c.nextPage()"
+                  ng-disabled="c.loading || c.data.currentPage >= c.data.totalPages">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <div class="alert alert-info"
+           ng-if="c.data.hasRun && !c.loading && !c.data.records.length && !c.error">
+        No records found.
+      </div>
+    </div>
+  </div>
+</div>

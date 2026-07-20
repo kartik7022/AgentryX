@@ -1,0 +1,23 @@
+# Ignore Python virtual environments
+.venv
+venv/
+ENV/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Git metadata
+.git
+.gitignore
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore build artifacts
+*.log
+*.sqlite3
+node_modules

@@ -1,0 +1,44 @@
+# Core web framework
+fastapi
+uvicorn[standard]
+
+# Database — SQLAlchemy (eivs.* tables via psycopg3)
+sqlalchemy
+psycopg[binary]
+alembic
+python-dotenv
+
+# Database — psycopg2 (auth.* tables via Account Creation System code)
+psycopg2-binary==2.9.9
+
+# Settings
+pydantic
+pydantic[email]
+pydantic-settings
+
+# Auth / JWT
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.1.2
+
+# HTTP client (used internally for potential future cross-service calls)
+httpx
+
+# Vault
+hvac
+
+# Data connectors (Credential Gateway)
+snowflake-connector-python
+pyodbc
+oracledb
+pyjwt
+# Utilities
+python-multipart==0.0.6
+pytest
+pytest-asyncio
+
+
+
+
+
+apscheduler==3.10.4
