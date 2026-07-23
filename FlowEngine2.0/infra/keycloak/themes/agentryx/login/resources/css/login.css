@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap");
 
 :root {
+  color-scheme: light;
   --agx-bg-canvas: #f8fafc;
   --agx-bg-surface: #ffffff;
   --agx-bg-muted: #f1f5f9;
@@ -396,10 +397,48 @@ a:hover {
 }
 
 .agx-card-copy {
-  max-width: 32ch;
-  margin: 14px auto 24px;
+  max-width: 42ch;
+  margin: 14px 0 22px;
   color: var(--agx-text-muted);
   font-size: 15px;
+  line-height: 1.65;
+}
+
+.agx-logout-card .agx-card-copy {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.agx-form-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.agx-form-actions-inline {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.agx-info-panel {
+  margin: 18px 0 22px;
+  padding: 16px;
+  border: 1px solid var(--agx-border-soft);
+  border-radius: var(--agx-radius-md);
+  background: var(--agx-bg-elevated);
+  color: var(--agx-text-base);
+}
+
+.agx-info-panel p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.agx-info-panel strong {
+  color: var(--agx-text-strong);
+}
+
+.agx-info-panel-muted {
+  background: var(--agx-bg-muted);
 }
 
 .agx-logout-card .agx-button + .agx-button {
@@ -440,5 +479,9 @@ a:hover {
 
   .agx-auth-card-header {
     flex-direction: column;
+  }
+
+  .agx-form-actions-inline {
+    grid-template-columns: 1fr;
   }
 }

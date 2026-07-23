@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script src="/runtime-config.js"></script>
     <script>
       window.__TENANT_ENV__ = {
         keycloakUrl: "http://localhost:7000",
@@ -19,6 +20,9 @@
         portalBase: "/tenant",
         billingPortalBase: "/tenant/billing",
         killbillGatewayUrl: "http://localhost:3002",
+        stripePublishableKey: "",
+        razorpayKeyId: "",
+        ...(window.__TENANT_ENV__ || {}),
       };
     </script>
   </head>

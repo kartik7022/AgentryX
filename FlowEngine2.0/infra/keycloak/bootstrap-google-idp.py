@@ -157,6 +157,32 @@ def configure_smtp(base_url, token, realm, smtp_server):
     )
 
 
+def configure_realm_theme(base_url, token, realm, login_theme=None, email_theme=None, clear_email_theme=False):
+    encoded_realm = urllib.parse.quote(realm, safe="")
+    realm_path = f"/admin/realms/{encoded_realm}"
+    realm_config = keycloak_admin_request(base_url, token, "GET", realm_path)
+
+    changed = False
+    theme_updates = {
+        "loginTheme": login_theme,
+        "emailTheme": email_theme,
+    }
+    for theme_key, theme_name in theme_updates.items():
+        if theme_name and realm_config.get(theme_key) != theme_name:
+            realm_config[theme_key] = theme_name
+            changed = True
+    if clear_email_theme and realm_config.get("emailTheme"):
+        realm_config["emailTheme"] = ""
+        changed = True
+
+    if not changed:
+        log(f"Theme settings already configured for realm '{realm}'.")
+        return
+
+    keycloak_admin_request(base_url, token, "PUT", realm_path, realm_config)
+    log(f"Theme settings configured for realm '{realm}'.")
+
+
 def configure_google_provider(base_url, token, realm, client_id, client_secret, alias):
     encoded_realm = urllib.parse.quote(realm, safe="")
     encoded_alias = urllib.parse.quote(alias, safe="")
@@ -196,14 +222,15 @@ def main():
     google_client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip()
     google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET", "").strip()
     google_alias = os.getenv("GOOGLE_IDP_ALIAS", "google").strip() or "google"
+    theme_name = os.getenv("KEYCLOAK_BOOTSTRAP_THEME", "agentryx").strip() or "agentryx"
+    master_login_theme = (
+        os.getenv("KEYCLOAK_BOOTSTRAP_MASTER_LOGIN_THEME", "agentryx-keycloak-admin").strip()
+        or "agentryx-keycloak-admin"
+    )
     smtp_server = build_smtp_server()
 
     google_configured = not (is_placeholder(google_client_id) or is_placeholder(google_client_secret))
     smtp_configured = smtp_server is not None
-
-    if not google_configured and not smtp_configured:
-        log("Google OAuth and SMTP credentials are not configured in .env. Skipping realm bootstrap.")
-        return 0
 
     if not google_configured:
         log("Google OAuth credentials are not configured in .env. Skipping Google IdP bootstrap.")
@@ -212,6 +239,9 @@ def main():
 
     wait_for_keycloak(base_url)
     token = get_admin_token(base_url, admin_username, admin_password)
+
+    configure_realm_theme(base_url, token, "master", login_theme=master_login_theme, clear_email_theme=True)
+    configure_realm_theme(base_url, token, realm, login_theme=theme_name, email_theme=theme_name)
 
     if smtp_configured:
         configure_smtp(base_url, token, realm, smtp_server)

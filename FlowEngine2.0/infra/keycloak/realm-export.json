@@ -4,6 +4,7 @@
   "displayName": "AgentryX",
   "displayNameHtml": "AgentryX",
   "loginTheme": "agentryx",
+  "emailTheme": "agentryx",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,

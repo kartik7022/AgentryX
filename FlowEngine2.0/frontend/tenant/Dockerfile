@@ -12,6 +12,7 @@ FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker-runtime-config.sh /docker-entrypoint.d/40-tenant-runtime-config.sh
 
 EXPOSE 80
 

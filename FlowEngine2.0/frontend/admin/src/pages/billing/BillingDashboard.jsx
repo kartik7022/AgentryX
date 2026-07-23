@@ -10,6 +10,26 @@ function StatCard({ label, value, sub, colorClass }) {
   );
 }
 
+function countActiveSubscriptions(bundles) {
+  if (!Array.isArray(bundles)) return 0;
+
+  return bundles.reduce((total, bundleOrSubscription) => {
+    if (bundleOrSubscription?.state) {
+      return String(bundleOrSubscription.state).toUpperCase() === "ACTIVE"
+        ? total + 1
+        : total;
+    }
+
+    const subscriptions = Array.isArray(bundleOrSubscription?.subscriptions)
+      ? bundleOrSubscription.subscriptions
+      : [];
+
+    return total + subscriptions.filter(
+      (subscription) => String(subscription?.state || "").toUpperCase() === "ACTIVE",
+    ).length;
+  }, 0);
+}
+
 export default function BillingDashboard() {
   const [stats, setStats] = useState({
     totalAccounts: 0,
@@ -59,7 +79,7 @@ export default function BillingDashboard() {
             const subs = subRes.ok ? await subRes.json() : [];
             const invs = invRes.ok ? await invRes.json() : [];
 
-            if (Array.isArray(subs)) totalActiveSubs += subs.length;
+            totalActiveSubs += countActiveSubscriptions(subs);
             if (Array.isArray(invs)) {
               totalInv += invs.length;
               unpaidInv += invs.filter((inv) => inv.balance > 0).length;

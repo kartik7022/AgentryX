@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
 
   killbill:
-    image: killbill-fixed
+    image: killbill/killbill:0.24.10
     container_name: killbill-server
     ports:
       - "8080:8080"
@@ -86,8 +86,11 @@ services:
       KILLBILL_DAO_URL: jdbc:mysql://killbill-db:3306/killbill
       KILLBILL_DAO_USER: root
       KILLBILL_DAO_PASSWORD: killbill
+      KB_ADMIN_PASSWORD: password
       JAVA_OPTS: -Dcom.sun.jndi.rmiURLParsing=legacy
       KB_org_killbill_server_test_mode: "true"
+    volumes:
+      - ./infra/killbill/shiro.ini.template:/var/lib/killbill/config/shiro.ini.template:ro
     networks:
       - flowengine-net-2
     restart: unless-stopped
@@ -257,6 +260,8 @@ services:
       KEYCLOAK_BOOTSTRAP_READY_ATTEMPTS: 420
       KEYCLOAK_BOOTSTRAP_READY_DELAY_SECONDS: 2
       KEYCLOAK_BOOTSTRAP_REQUEST_TIMEOUT_SECONDS: 5
+      KEYCLOAK_BOOTSTRAP_THEME: agentryx
+      KEYCLOAK_BOOTSTRAP_MASTER_LOGIN_THEME: agentryx-keycloak-admin
       GOOGLE_IDP_ALIAS: google
     command: ["python", "/bootstrap-google-idp.py"]
     volumes:
@@ -272,6 +277,16 @@ services:
     container_name: tenant-ui
     ports:
       - "3000:80"
+    env_file:
+      - ./frontend/tenant/.env.runtime
+    environment:
+      TENANT_KEYCLOAK_URL: http://localhost:7000
+      TENANT_KEYCLOAK_REALM: flowengine
+      TENANT_KEYCLOAK_CLIENT_ID: agentryx-app
+      TENANT_APP_URL: http://localhost:8001
+      TENANT_PORTAL_BASE: /tenant
+      TENANT_BILLING_PORTAL_BASE: /tenant/billing
+      TENANT_KILLBILL_GATEWAY_URL: http://localhost:3002
     depends_on:
       - app
     networks:

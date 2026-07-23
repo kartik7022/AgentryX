@@ -75,6 +75,11 @@ function themeColor(variableName, fallback = "blue") {
   return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || fallback;
 }
 
+function numberOrZero(value) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
 export function CheckoutPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -123,7 +128,10 @@ export function CheckoutPage() {
   }, [user?.tenantId, user?.email]);
 
   const taxInfo = taxRates[country] || taxRates.OTHER;
-  const basePrice = selectedPlan?.price || 0;
+  const basePrice = numberOrZero(selectedPlan?.price);
+  const selectedTrialDays = numberOrZero(selectedPlan?.trialDays);
+  const hasTrial = selectedTrialDays > 0;
+  const requiresImmediatePayment = basePrice > 0 && !hasTrial;
   const taxAmount = (basePrice * taxInfo.rate) / 100;
   const totalAmount = basePrice + taxAmount;
   const isIndia = country === "IN";
@@ -148,16 +156,31 @@ export function CheckoutPage() {
   }
 
   async function handleSubscription(paymentId, provider) {
-    if (!selectedPlan || !accountId || isSubmittingRef.current) return;
+    if (isSubmittingRef.current) return;
+    if (!selectedPlan) {
+      setError("Select a plan before subscribing.");
+      setStep("select-plan");
+      return;
+    }
+    if (!accountId) {
+      setError("No billing account was found for this tenant.");
+      setStep("enter-details");
+      return;
+    }
+
     isSubmittingRef.current = true;
     setError("");
     setStep("processing");
     try {
       const killBillPlanName = selectedPlan.id || selectedPlan.planName || selectedPlan.name;
+      if (!killBillPlanName) {
+        throw new Error("Selected plan is missing a Kill Bill plan name.");
+      }
       if (paymentId && provider) {
         await billingApi.recordPayment({
           provider,
           paymentId,
+          accountId,
           customerName: name,
           customerEmail: email,
           planName: selectedPlan.name,
@@ -190,11 +213,11 @@ export function CheckoutPage() {
       setError("No billing account was found for this tenant.");
       return;
     }
-    if (selectedPlan.price > 0 && !selectedPlan.trialDays && !isIndia) {
+    if (requiresImmediatePayment && !isIndia) {
       setShowStripeForm(true);
       return;
     }
-    if (selectedPlan.price > 0 && !selectedPlan.trialDays && isIndia) {
+    if (requiresImmediatePayment && isIndia) {
       try {
         const paymentId = await initiateRazorpayPayment({
           amount: Math.round(totalAmount * 100),
@@ -205,6 +228,7 @@ export function CheckoutPage() {
         await handleSubscription(paymentId, "razorpay");
       } catch (paymentError) {
         setError(paymentError.message || "Payment failed.");
+        setStep("enter-details");
       }
       return;
     }
@@ -212,6 +236,10 @@ export function CheckoutPage() {
   }
 
   async function initiateRazorpayPayment({ amount, customerName, customerEmail, planName }) {
+    if (!env.razorpayKeyId) {
+      throw new Error("Razorpay public key is not configured.");
+    }
+
     const loaded = await loadRazorpayScript();
     if (!loaded) {
       throw new Error("Failed to load Razorpay payment form.");
@@ -220,6 +248,9 @@ export function CheckoutPage() {
       amount,
       currency: "INR",
     });
+    if (!order?.id || !order?.amount) {
+      throw new Error(order?.error || "Razorpay order was not created.");
+    }
     return new Promise((resolve, reject) => {
       const razorpay = new window.Razorpay({
         key: env.razorpayKeyId,
@@ -230,7 +261,13 @@ export function CheckoutPage() {
         description: `Subscribe to ${planName}`,
         prefill: { name: customerName, email: customerEmail },
         theme: { color: themeColor("--color-primary-700") },
-        handler: (response) => resolve(response.razorpay_payment_id),
+        handler: (response) => {
+          if (!response?.razorpay_payment_id) {
+            reject(new Error("Razorpay did not return a payment id."));
+            return;
+          }
+          resolve(response.razorpay_payment_id);
+        },
         modal: { ondismiss: () => reject(new Error("Payment cancelled")) },
       });
       razorpay.on("payment.failed", (response) => {
@@ -317,7 +354,7 @@ export function CheckoutPage() {
                 }}
               >
                 {index === 1 ? <div className="mono-label" style={{ color: "var(--color-primary-700)", marginBottom: "var(--space-3)" }}>Popular</div> : null}
-                {plan.trialDays ? <div className="mono-label" style={{ color: "var(--color-status-success-text)", marginBottom: "var(--space-3)" }}>{plan.trialDays} day trial</div> : null}
+                {numberOrZero(plan.trialDays) > 0 ? <div className="mono-label" style={{ color: "var(--color-status-success-text)", marginBottom: "var(--space-3)" }}>{numberOrZero(plan.trialDays)} day trial</div> : null}
                 <div style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--font-weight-bold)", marginBottom: "var(--space-2)" }}>{plan.name}</div>
                 <div style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--font-weight-extrabold)", marginBottom: "var(--space-2)" }}>
                   {Number(plan.price) === 0 ? "Free" : `₹${plan.price}`}
@@ -338,7 +375,7 @@ export function CheckoutPage() {
           <div className="surface-card" style={{ padding: "var(--space-6)", background: "var(--color-primary-50)", borderColor: "var(--color-primary-200)", marginBottom: "var(--space-6)" }}>
             <div className="mono-label" style={{ color: "var(--color-primary-700)", marginBottom: "var(--space-2)" }}>Selected Plan</div>
             <div style={{ fontWeight: "var(--font-weight-bold)", marginBottom: "var(--space-1)" }}>{selectedModule} - {selectedPlan.name}</div>
-            <div style={{ color: "var(--color-text-muted)" }}>{selectedPlan.trialDays ? `${selectedPlan.trialDays} day free trial` : "Paid plan starts immediately"}</div>
+            <div style={{ color: "var(--color-text-muted)" }}>{hasTrial ? `${selectedTrialDays} day free trial` : "Paid plan starts immediately"}</div>
           </div>
 
           {!showStripeForm ? (
@@ -361,7 +398,7 @@ export function CheckoutPage() {
               <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap" }}>
                 <AppButton tooltip="Go back to plan selection" type="button" variant="secondary" onClick={() => setStep("select-plan")}>Back</AppButton>
                 <AppButton tooltip="Continue with this subscribe flow" type="submit">
-                  {selectedPlan.price === 0 || selectedPlan.trialDays ? "Start Subscription" : country === "IN" ? `Pay INR ${totalAmount.toFixed(2)}` : `Pay $${(totalAmount / 83).toFixed(2)}`}
+                  {basePrice === 0 || hasTrial ? "Start Subscription" : country === "IN" ? `Pay INR ${totalAmount.toFixed(2)}` : `Pay $${(totalAmount / 83).toFixed(2)}`}
                 </AppButton>
               </div>
             </form>

@@ -291,7 +291,7 @@ async def create_account(
     async def _create_kb_account():
         return await client.post(
             f"{settings.killbill_gateway_url}/api/v1/accounts",
-            json={"email": email, "externalKey": tenant_id},
+            json={"email": email, "externalKey": tenant_id, "currency": "INR"},
             headers={
                 "X-Killbill-ApiKey": settings.killbill_api_key,
                 "X-Killbill-ApiSecret": settings.killbill_api_secret,
